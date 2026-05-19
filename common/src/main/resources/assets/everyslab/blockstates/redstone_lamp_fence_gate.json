@@ -1,0 +1,156 @@
+{
+  "variants": {
+    "facing=east,in_wall=false,open=false,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_off",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=east,in_wall=false,open=false,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_on",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=east,in_wall=false,open=true,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_open_off",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=east,in_wall=false,open=true,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_open_on",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=east,in_wall=true,open=false,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_off",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=east,in_wall=true,open=false,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_on",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=east,in_wall=true,open=true,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_open_off",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=east,in_wall=true,open=true,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_open_on",
+      "uvlock": true,
+      "y": 270
+    },
+    "facing=north,in_wall=false,open=false,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_off",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north,in_wall=false,open=false,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_on",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north,in_wall=false,open=true,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_open_off",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north,in_wall=false,open=true,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_open_on",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north,in_wall=true,open=false,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_off",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north,in_wall=true,open=false,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_on",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north,in_wall=true,open=true,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_open_off",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=north,in_wall=true,open=true,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_open_on",
+      "uvlock": true,
+      "y": 180
+    },
+    "facing=south,in_wall=false,open=false,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_off",
+      "uvlock": true
+    },
+    "facing=south,in_wall=false,open=false,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_on",
+      "uvlock": true
+    },
+    "facing=south,in_wall=false,open=true,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_open_off",
+      "uvlock": true
+    },
+    "facing=south,in_wall=false,open=true,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_open_on",
+      "uvlock": true
+    },
+    "facing=south,in_wall=true,open=false,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_off",
+      "uvlock": true
+    },
+    "facing=south,in_wall=true,open=false,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_on",
+      "uvlock": true
+    },
+    "facing=south,in_wall=true,open=true,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_open_off",
+      "uvlock": true
+    },
+    "facing=south,in_wall=true,open=true,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_open_on",
+      "uvlock": true
+    },
+    "facing=west,in_wall=false,open=false,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_off",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=west,in_wall=false,open=false,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_on",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=west,in_wall=false,open=true,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_open_off",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=west,in_wall=false,open=true,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_open_on",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=west,in_wall=true,open=false,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_off",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=west,in_wall=true,open=false,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_on",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=west,in_wall=true,open=true,lit=false": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_open_off",
+      "uvlock": true,
+      "y": 90
+    },
+    "facing=west,in_wall=true,open=true,lit=true": {
+      "model": "everyslab:block/redstone_lamp_fence_gate_wall_open_on",
+      "uvlock": true,
+      "y": 90
+    }
+  }
+}

@@ -1,0 +1,229 @@
+package dev.boxadactle.everyslab;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import dev.boxadactle.everyslab.mixin.BlockStateInvoker;
+import dev.boxadactle.everyslab.registry.*;
+import net.minecraft.client.data.models.model.ModelLocationUtils;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.phys.shapes.Shapes;
+import oshi.util.tuples.Pair;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+
+public class EverySlab {
+
+    public static final String MOD_ID = "everyslab";
+
+    public static List<Block> FILTERED_BLOCKS = new ArrayList<>();
+
+    public static final VariantRegistry FENCE_GATES = new FenceGateRegistry();
+    public static final VariantRegistry FENCES = new FenceRegistry();
+    public static final VariantRegistry SLABS = new SlabRegistry();
+    public static final VariantRegistry STAIRS = new StairRegistry();
+    public static final VariantRegistry WALLS = new WallRegistry();
+
+    static {
+        FILTERED_BLOCKS.add(Blocks.REDSTONE_BLOCK);
+        FILTERED_BLOCKS.add(Blocks.REDSTONE_LAMP);
+    }
+
+    public static void init() {
+        ModConfig.load();
+
+        BuiltInRegistries.BLOCK.forEach(block -> {
+            ResourceLocation blo = BuiltInRegistries.BLOCK.getKey(block);
+
+            // maybe this will be a feature one day
+            if (!blo.getNamespace().equals("minecraft")) return;
+            if (blo.getPath().contains("bedrock")) return;
+            if (ModConfig.getBlockBlacklist().contains(blo.toString())) return;
+            try {
+                // filter for only full and solid blocks
+                boolean bl = true;
+                bl &= ((ShapeAccessor) block).getPlacholderShape_everyslab().equals(Shapes.block());
+                bl &= ((ShapeAccessor) block).hasCollision_everyslab();
+                bl &= !(block instanceof EntityBlock);
+                bl &= !(block instanceof SimpleWaterloggedBlock);
+                bl &= !hasCustomProperties(block);
+                bl &= !hasMultipleTextures(block);
+                if (bl) FILTERED_BLOCKS.add(block);
+            } catch (Throwable ignored) {
+            }
+        });
+
+        FILTERED_BLOCKS = FILTERED_BLOCKS.stream().distinct().toList();
+
+        FILTERED_BLOCKS.forEach(block -> {
+            FENCE_GATES.createVariant(block);
+            FENCES.createVariant(block);
+            SLABS.createVariant(block);
+            STAIRS.createVariant(block);
+            WALLS.createVariant(block);
+        });
+    }
+
+    private static boolean hasMultipleTextures(Block block) {
+        ResourceLocation location = ModelLocationUtils.getModelLocation(block);
+        String path = "assets/" + location.getNamespace() + "/models/" + location.getPath() + ".json";
+        try (InputStream is = EverySlab.class.getClassLoader().getResourceAsStream(path)) {
+            if (is == null) return false;
+            JsonObject json = JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject();
+            // Check if textures object has more than one entry
+            if (json.has("textures")) {
+                JsonObject textures = json.getAsJsonObject("textures");
+                return textures.size() > 1;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private static boolean hasCustomProperties(Block block) {
+        try {
+            ((BlockStateInvoker) block).applyBlockState(null);
+            return false;
+        } catch (NullPointerException ignored) {
+            return true;
+        }
+    }
+
+    public static List<Block> getAllBlocks() {
+        List<Block> blocks = new ArrayList<>();
+        if (ModConfig.shouldGenerateFenceGates()) blocks.addAll(FENCE_GATES.blocks());
+        if (ModConfig.shouldGenerateFences()) blocks.addAll(FENCES.blocks());
+        if (ModConfig.shouldGenerateWalls()) blocks.addAll(WALLS.blocks());
+        if (ModConfig.shouldGenerateStairs()) blocks.addAll(STAIRS.blocks());
+        if (ModConfig.shouldGenerateSlabs()) blocks.addAll(SLABS.blocks());
+
+        return blocks;
+    }
+
+    public abstract static class VariantRegistry {
+
+        protected final HashMap<ResourceLocation, Pair<EverySlabBlockProvider, Block>> VARIANTS = new HashMap<>();
+
+        protected HashMap<ResourceLocation, ResourceLocation> VARIANT_BASE = new HashMap<>();
+        protected HashMap<ResourceLocation, Block> VARIANT_REGISTRY = new HashMap<>();
+        protected HashMap<ResourceLocation, Item> VARIANT_ITEM_REGISTRY = new HashMap<>();
+
+        protected abstract EverySlabBlockProvider getProvider();
+
+        protected abstract String append();
+
+        private boolean alreadyExists(Block base) {
+            AtomicBoolean bl = new AtomicBoolean(false);
+
+            VARIANTS.values().forEach(pair -> bl.set(bl.get() | BuiltInRegistries.BLOCK.getKey(base).equals(BuiltInRegistries.BLOCK.getKey(pair.getB()))));
+
+            return bl.get();
+        }
+
+        public void createVariant(Block block) {
+            ResourceLocation location = BuiltInRegistries.BLOCK.getKey(block);
+            String str = location.toString();
+            if (alreadyExists(block)) return;
+            if (
+                    BuiltInRegistries.BLOCK.get(ResourceLocation.parse(str + append())).isEmpty() &&
+                    BuiltInRegistries.BLOCK.get(ResourceLocation.parse(str.substring(0, str.length() - 1) + append())).isEmpty()
+            ) createVariant(block, getProvider());
+        }
+
+        public void createVariant(Block block, EverySlabBlockProvider provider) {
+            ResourceLocation location = BuiltInRegistries.BLOCK.getKey(block);
+            ResourceLocation location1 = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, location.getPath() + append());
+            VARIANTS.put(location1, new Pair<>(provider, block));
+            VARIANT_BASE.put(location1, location);
+        }
+
+        public void register(BlockRegister blockRegister) {
+            VARIANTS.forEach((resourceLocation, data) -> {
+                Pair<Block, Item> reg = blockRegister.registerBlock(resourceLocation, data.getA(), data.getB());
+                VARIANT_REGISTRY.put(resourceLocation, reg.getA());
+                VARIANT_ITEM_REGISTRY.put(resourceLocation, reg.getB());
+            });
+        }
+
+        public void registerBlocks(BlockRegister.OnlyBlock blockRegister) {
+            VARIANTS.forEach((resourceLocation, data) -> {
+                ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, resourceLocation);
+                Block block = data.getA().getVariant(data.getB(), key);
+                blockRegister.registerBlock(key, block);
+                VARIANT_REGISTRY.put(resourceLocation, block);
+            });
+        }
+
+        public void registerItems(BlockRegister.OnlyBlockItem itemRegister) {
+            VARIANTS.forEach((resourceLocation, data) -> {
+                ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, resourceLocation);
+                Block block = VARIANT_REGISTRY.get(resourceLocation);
+                Item item = new BlockItem(block, new Item.Properties().setId(key));
+                itemRegister.registerItem(key, item);
+                VARIANT_ITEM_REGISTRY.put(resourceLocation, item);
+            });
+        }
+
+        public Block getBlock(ResourceLocation location) {
+            return VARIANT_REGISTRY.get(location);
+        }
+
+        public Item getBlockItem(ResourceLocation location) {
+            return VARIANT_ITEM_REGISTRY.get(location);
+        }
+
+        public void forEachBlock(Consumer<Block> blockConsumer) {
+            VARIANT_REGISTRY.forEach((resourceLocation, block) -> blockConsumer.accept(block));
+        }
+
+        public void forEachId(Consumer<ResourceLocation> idConsumer) {
+            VARIANT_REGISTRY.forEach((resourceLocation, block) -> idConsumer.accept(resourceLocation));
+        }
+
+        public Block getBaseBlock(ResourceLocation location) {
+            return BuiltInRegistries.BLOCK.get(VARIANT_BASE.get(location)).get().value();
+        }
+
+        public ResourceLocation fromBaseBlock(ResourceLocation location) {
+            for (ResourceLocation key : VARIANT_BASE.keySet()) {
+                if (VARIANT_BASE.get(key).equals(location)) {
+                    return key;
+                }
+            }
+            return null;
+        }
+
+        public Block blockFromBaseBlock(ResourceLocation location) {
+            return getBlock(fromBaseBlock(location));
+        }
+
+        public boolean hasVariant(ResourceLocation base) {
+            return VARIANT_BASE.containsValue(base);
+        }
+
+        public Collection<? extends Block> blocks() {
+            return VARIANT_REGISTRY.values();
+        }
+
+        public Collection<? extends Item> items() {
+            return VARIANT_ITEM_REGISTRY.values();
+        }
+
+        protected ResourceLocation id(String path) {
+            return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, path);
+        }
+    }
+}

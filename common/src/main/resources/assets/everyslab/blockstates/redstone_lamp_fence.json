@@ -1,0 +1,106 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "everyslab:block/redstone_lamp_fence_post_off"
+      },
+      "when": {
+        "lit": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "everyslab:block/redstone_lamp_fence_post_on"
+      },
+      "when": {
+        "lit": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "everyslab:block/redstone_lamp_fence_side_off",
+        "uvlock": true
+      },
+      "when": {
+        "north": "true",
+        "lit": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "everyslab:block/redstone_lamp_fence_side_on",
+        "uvlock": true
+      },
+      "when": {
+        "north": "true",
+        "lit": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "everyslab:block/redstone_lamp_fence_side_off",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "east": "true",
+        "lit": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "everyslab:block/redstone_lamp_fence_side_on",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "east": "true",
+        "lit": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "everyslab:block/redstone_lamp_fence_side_off",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "south": "true",
+        "lit": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "everyslab:block/redstone_lamp_fence_side_on",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "south": "true",
+        "lit": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "everyslab:block/redstone_lamp_fence_side_off",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "west": "true",
+        "lit": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "everyslab:block/redstone_lamp_fence_side_on",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "west": "true",
+        "lit": "true"
+      }
+    }
+  ]
+}
