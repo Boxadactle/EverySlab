@@ -1,12 +1,13 @@
 ## 🌍 Translations
 
-EverySlab supports community translations! Since translations are generated via **NeoForge's data generation system**, contributing requires writing a small amount of Java code. Don't worry — it's straightforward and this guide will walk you through every step.
+EverySlab supports community translations! Since translations are generated via **NeoForge's data generation system**, contributing requires writing a small amount of Java code. However, it's straightforward and this guide has every step.
 
 ### Prerequisites
 
 - A basic understanding of Java syntax
 - A working NeoForge mod development environment with this project set up
-- This guide is a paraphrased version of the [NeoForge Docs](https://docs.neoforged.net/docs/resources/client/i18n)
+- You can get this by cloning the repository
+- This guide is a paraphrased version of the [NeoForge Docs](https://docs.neoforged.net/docs/resources/client/i18n/#datagen)
 
 ---
 
