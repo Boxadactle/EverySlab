@@ -79,8 +79,6 @@ public class EsEsProvider extends LanguageProvider {
 Open `EverySlabNeoforge.java` (the mod's main NeoForge class) and find the `GatherDataEvent` handler. It should look something like this:
 
 ```java
-import dev.boxadactle.everyslab.datagen.EsEsProvider;
-
 @SubscribeEvent
 public static void gatherData(GatherDataEvent.Client event) {
     event.createProvider(ModelGenerator::new);
@@ -126,6 +124,11 @@ Open that file and verify the output looks correct before submitting a pull requ
 | `itemGroup.everyslab_slabs` | Creative tab for slab variants |
 | `itemGroup.everyslab_stairs` | Creative tab for stair variants |
 | `itemGroup.everyslab_walls` | Creative tab for wall variants |
+| `generic fence gate localization` | %s Fence Gate |
+| `generic fence localization` | %s Fence |
+| `generic slab localization` | %s Slab |
+| `generic stair localization` | %s Stairs |
+| `generic wall localization` | %s Wall |
 
 ---
 
