@@ -1,13 +1,9 @@
-package dev.boxadactle.everyslab.datagen;
+package dev.boxadactle.everyslab.datagen.localization;
 
 import dev.boxadactle.everyslab.EverySlab;
-import dev.boxadactle.everyslab.registry.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 public class EsEsProvider extends LanguageProvider {

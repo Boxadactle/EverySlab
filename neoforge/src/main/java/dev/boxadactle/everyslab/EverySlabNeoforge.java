@@ -1,7 +1,7 @@
 package dev.boxadactle.everyslab;
 
 import dev.boxadactle.everyslab.datagen.*;
-import dev.boxadactle.everyslab.registry.*;
+import dev.boxadactle.everyslab.datagen.localization.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.LootTableProvider;
