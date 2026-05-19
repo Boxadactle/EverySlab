@@ -70,7 +70,7 @@ public class EsEsProvider extends LanguageProvider {
 }
 ```
 
-> ⚠️ **Important:** The block names passed to `String.format()` (e.g. `base.getName().getString()`) come from Minecraft's own en_us translations. Your language's Minecraft installation will substitute the correct translated block name automatically at runtime, so you only need to worry about the **suffix or surrounding words** (e.g. `"Slab"`, `"Fence Gate"`). Adjust word order and grammar as needed for your language.
+> ⚠️ **Important:** The block names passed to `String.format()` (e.g. `base.getName().getString()`) come from Minecraft's own localizations, since we used a helper method `LangUtil.injectLanguage("es_es", false);`. Your language's Minecraft installation will substitute the correct translated block name automatically at runtime, so you only need to worry about the **suffix or surrounding words** (e.g. `"Slab"`, `"Fence Gate"`). Adjust word order and grammar as needed for your language.
 
 ---
 
