@@ -18,10 +18,10 @@ No configuration needed. Just drop in the mod and every block gets its variants.
 
 ## Features
 
-- **Universal coverage** — slab and stair variants are generated for every registered block, including modded ones
+- **Universal coverage** — slab and stair variants are generated for every registered solid block
 - **Automatic recipes** — crafting table and stonecutter recipes are created for all new variants
 - **Inherited block properties** — hardness, blast resistance, tool type, harvest level, and sounds are copied from the parent block
-- **Creative tab integration** — variants appear alongside their parent blocks in the creative inventory
+- **Creative tab integration** — variants appear in designated creative tabs
 - **Duplicate prevention** — blocks that already have official slab/stair variants are skipped automatically
 - **Opt-out config** — blacklist specific blocks or entire namespaces via the config file
 
@@ -29,9 +29,9 @@ No configuration needed. Just drop in the mod and every block gets its variants.
 
 ## Installation
 
-1. Install your mod loader of choice (Fabric, Forge, or NeoForge)
+1. Install your mod loader of choice (Fabric or NeoForge)
 2. If using Fabric, also install [Fabric API](https://modrinth.com/mod/fabric-api)
-3. Download the latest EverySlab `.jar` from the [Releases](#) page
+3. Download the latest EverySlab `.jar`
 4. Place the `.jar` in your `mods/` folder
 5. Launch the game — no further setup required
 
@@ -39,13 +39,13 @@ No configuration needed. Just drop in the mod and every block gets its variants.
 
 ## Compatibility
 
-| Loader     | Status     | Notes                          |
-|------------|------------|-------------------------------|
-| Fabric     | ✅ Supported | Requires Fabric API            |
-| Quilt      | ✅ Supported | Requires QSL                   |
-| Forge      | ✅ Supported | No extra dependencies          |
+| Loader   | Status     | Notes                          |
+|----------|------------|-------------------------------|
+| Fabric   | ✅ Supported | Requires Fabric API            |
+| Quilt    | ✅ Supported | Requires QSL                   |
+| NeoForge | ✅ Supported | No extra dependencies          |
 
-EverySlab is fully compatible with other building and decoration mods. Blocks added by mods like Quark, Supplementaries, or Create will automatically receive slab and stair variants as well. Existing official variants from those mods are detected and skipped.
+EverySlab is fully compatible with other building and decoration mods. Blocks added by mods like Quark, Supplementaries, or Create will not receive variants.
  
 ---
 
@@ -86,23 +86,29 @@ cd EverySlab
 ./gradlew build
 ```
 
-The compiled `.jar` will be in `build/libs/`.
+The compiled `.jar` will be in `build/<loader>/libs/`.
  
 ---
 
 ## Contributing
 
-Contributions are welcome! Please open an issue before submitting a pull request for large changes. Bug reports and feature requests can be filed via [GitHub Issues](#).
- 
+Contributions are welcome! Please open an issue before submitting a pull request for large changes. Bug reports and feature requests can be filed via [GitHub Issues](https://github.com/Boxadactle/EverySlab/issues).
+
+### Translating
+
+As EverySlab's assets are generated when built, mod translation is not as straightfoward as other mods.
+
+If you would like to translate this mod, please follow [this guide](https://github.com/Boxadactle/EverySlab/tree/master/neoforge/src/main/java/dev/boxadactle/everyslab/datagen/README.md).
+
 ---
 
 ## License
 
-EverySlab is licensed under the [MIT License](LICENSE).
+EverySlab is licensed under the [GNU GPLv3 License](https://github.com/Boxadactle/EverySlab/blob/master/LICENSE).
  
 ---
 
 ## Credits
 
-Made with ❤️ by [Your Name]. Inspired by years of wanting to build a diagonal staircase out of deepslate bricks.
+Made with ❤️ by Boxadactle. Inspired by years of wanting to build a diagonal staircase out of sponges.
  

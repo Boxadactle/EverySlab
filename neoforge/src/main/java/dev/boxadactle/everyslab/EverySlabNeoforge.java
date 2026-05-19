@@ -36,7 +36,6 @@ public class EverySlabNeoforge {
 
         @SubscribeEvent
         public static void gatherData(GatherDataEvent.Client event) {
-            event.createProvider(EnUsProvider::new);
             event.createProvider(ModelGenerator::new);
             event.createProvider(BlockTagsGenerator::new);
             event.createProvider((output, lookupProvider) -> new LootTableProvider(output, Set.of(), List.of(new LootTableProvider.SubProviderEntry(
@@ -44,6 +43,10 @@ public class EverySlabNeoforge {
                     LootContextParamSets.BLOCK
             )), lookupProvider));
             event.createProvider(RecipeGenerator.Runner::new);
+
+            // language providers
+            event.createProvider(EnUsProvider::new);
+            event.createProvider(EsEsProvider::new);
         }
 
         @SubscribeEvent(priority = EventPriority.LOWEST)
