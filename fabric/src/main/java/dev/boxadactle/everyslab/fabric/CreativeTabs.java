@@ -1,8 +1,9 @@
 package dev.boxadactle.everyslab.fabric;
 
 import dev.boxadactle.everyslab.Constants;
-import dev.boxadactle.everyslab.ModConfig;
+import dev.boxadactle.everyslab.EverySlab;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -44,10 +45,32 @@ public class CreativeTabs {
             .build();
 
     public static void registerAll() {
-        if (ModConfig.shouldGenerateFenceGates()) Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, FENCEGATE_GROUP_KEY, FENCEGATE_GROUP);
-        if (ModConfig.shouldGenerateFences()) Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, FENCE_GROUP_KEY, FENCE_GROUP);
-        if (ModConfig.shouldGenerateSlabs()) Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, SLAB_GROUP_KEY, SLAB_GROUP);
-        if (ModConfig.shouldGenerateStairs()) Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, STAIR_GROUP_KEY, STAIR_GROUP);
-        if (ModConfig.shouldGenerateWalls()) Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, WALL_GROUP_KEY, WALL_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, FENCEGATE_GROUP_KEY, FENCEGATE_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, FENCE_GROUP_KEY, FENCE_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, SLAB_GROUP_KEY, SLAB_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, STAIR_GROUP_KEY, STAIR_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, WALL_GROUP_KEY, WALL_GROUP);
+    }
+
+    public static void addItems() {
+        ItemGroupEvents.modifyEntriesEvent(CreativeTabs.FENCEGATE_GROUP_KEY).register(group -> {
+            EverySlab.FENCE_GATES.forEachBlock(group::accept);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(CreativeTabs.FENCE_GROUP_KEY).register(group -> {
+            EverySlab.FENCES.forEachBlock(group::accept);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(CreativeTabs.SLAB_GROUP_KEY).register(group -> {
+            EverySlab.SLABS.forEachBlock(group::accept);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(CreativeTabs.STAIR_GROUP_KEY).register(group -> {
+            EverySlab.STAIRS.forEachBlock(group::accept);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(CreativeTabs.WALL_GROUP_KEY).register(group -> {
+            EverySlab.WALLS.forEachBlock(group::accept);
+        });
     }
 }

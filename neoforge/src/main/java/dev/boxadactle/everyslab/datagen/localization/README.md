@@ -45,6 +45,11 @@ public class EsEsProvider extends LanguageProvider {
         add("itemGroup.everyslab_stairs", "Variantes de escaleras");
         add("itemGroup.everyslab_walls", "Variantes de muro");
 
+        // registry messages
+        add("everyslab.registrydesync.1", "¡El registro de clientes de EverySlab no es el mismo que el del servidor!");
+        add("everyslab.registrydesync.2", "¿Quieres sobrescribir el registro del cliente para conectarte a este servidor? (se cierra el juego)");
+        add("everyslab.overwrite", "Sobrescribir");
+
         // Block name suffixes — these are appended to the base block's translated name
         EverySlab.FILTERED_BLOCKS.forEach(base -> {
             ResourceLocation baseLocation = BuiltInRegistries.BLOCK.getKey(base);
@@ -120,18 +125,20 @@ Open that file and verify the output looks correct before submitting a pull requ
 
 ### Translation Keys Reference
 
-| Key | Description |
-|-----|-------------|
-| `itemGroup.everyslab_fencegates` | Creative tab for fence gate variants |
-| `itemGroup.everyslab_fences` | Creative tab for fence variants |
-| `itemGroup.everyslab_slabs` | Creative tab for slab variants |
-| `itemGroup.everyslab_stairs` | Creative tab for stair variants |
-| `itemGroup.everyslab_walls` | Creative tab for wall variants |
-| `generic fence gate localization` | %s Fence Gate |
-| `generic fence localization` | %s Fence |
-| `generic slab localization` | %s Slab |
-| `generic stair localization` | %s Stairs |
-| `generic wall localization` | %s Wall |
+| Key                               | Translation                                                                            |
+|-----------------------------------|----------------------------------------------------------------------------------------|
+| `itemGroup.everyslab_fencegates`  | Creative tab for fence gate variants                                                   |
+| `itemGroup.everyslab_fences`      | Creative tab for fence variants                                                        |
+| `itemGroup.everyslab_slabs`       | Creative tab for slab variants                                                         |
+| `itemGroup.everyslab_stairs`      | Creative tab for stair variants                                                        |
+| `itemGroup.everyslab_walls`       | Creative tab for wall variants                                                         |
+| `everyslab.registrydesync.1`      | EverySlab's client registry is not the same as the server!                             |
+| `everyslab.registrydesync.2`      | Would you like to overwrite the client registry to join this server? (closes the game) |
+| `generic fence gate localization` | %s Fence Gate                                                                          |
+| `generic fence localization`      | %s Fence                                                                               |
+| `generic slab localization`       | %s Slab                                                                                |
+| `generic stair localization`      | %s Stairs                                                                              |
+| `generic wall localization`       | %s Wall                                                                                |
 
 ---
 

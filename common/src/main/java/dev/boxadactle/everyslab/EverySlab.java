@@ -1,10 +1,9 @@
 package dev.boxadactle.everyslab;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dev.boxadactle.everyslab.mixin.BlockStateInvoker;
 import dev.boxadactle.everyslab.registry.*;
-import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -12,15 +11,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.phys.shapes.Shapes;
 import oshi.util.tuples.Pair;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
@@ -42,28 +37,20 @@ public class EverySlab {
     }
 
     public static void init() {
-        ModConfig.load();
-
-        BuiltInRegistries.BLOCK.forEach(block -> {
+        List<Block> generated = getGeneratedBlocksIfExists();
+        if (generated == null) BuiltInRegistries.BLOCK.forEach(block -> {
             ResourceLocation blo = BuiltInRegistries.BLOCK.getKey(block);
 
             // maybe this will be a feature one day
             if (!blo.getNamespace().equals("minecraft")) return;
             if (blo.getPath().contains("bedrock")) return;
-            if (ModConfig.getBlockBlacklist().contains(blo.toString())) return;
             try {
                 // filter for only full and solid blocks
-                boolean bl = true;
-                bl &= ((ShapeAccessor) block).getPlacholderShape_everyslab().equals(Shapes.block());
-                bl &= ((ShapeAccessor) block).hasCollision_everyslab();
-                bl &= !(block instanceof EntityBlock);
-                bl &= !(block instanceof SimpleWaterloggedBlock);
-                bl &= !hasCustomProperties(block);
-                bl &= !hasMultipleTextures(block);
-                if (bl) FILTERED_BLOCKS.add(block);
+                if (EverySlabClient.shouldRegisterBlock(block)) FILTERED_BLOCKS.add(block);
             } catch (Throwable ignored) {
             }
         });
+        else FILTERED_BLOCKS = generated;
 
         FILTERED_BLOCKS = FILTERED_BLOCKS.stream().distinct().toList();
 
@@ -76,39 +63,30 @@ public class EverySlab {
         });
     }
 
-    private static boolean hasMultipleTextures(Block block) {
-        ResourceLocation location = ModelLocationUtils.getModelLocation(block);
-        String path = "assets/" + location.getNamespace() + "/models/" + location.getPath() + ".json";
-        try (InputStream is = EverySlab.class.getClassLoader().getResourceAsStream(path)) {
-            if (is == null) return false;
-            JsonObject json = JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject();
-            // Check if textures object has more than one entry
-            if (json.has("textures")) {
-                JsonObject textures = json.getAsJsonObject("textures");
-                return textures.size() > 1;
-            }
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
-    }
+    private static List<Block> getGeneratedBlocksIfExists() {
+        String path = "data/everyslab/generated.json";
+        try (InputStream stream = EverySlab.class.getClassLoader().getResourceAsStream(path)) {
+            if (stream == null) return null;
+            JsonObject json = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
+            JsonArray generated = json.getAsJsonArray("generated");
 
-    private static boolean hasCustomProperties(Block block) {
-        try {
-            ((BlockStateInvoker) block).applyBlockState(null);
-            return false;
-        } catch (NullPointerException ignored) {
-            return true;
+            List<Block> blocks = new ArrayList<>();
+            generated.asList().forEach(id -> blocks.add(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(id.getAsString()))));
+
+            return blocks;
+        } catch (Exception e) {
+            Constants.LOG.warn("Unable to read generated registry! If we are not in datagen mode, then this is a bug!");
+            return null;
         }
     }
 
     public static List<Block> getAllBlocks() {
         List<Block> blocks = new ArrayList<>();
-        if (ModConfig.shouldGenerateFenceGates()) blocks.addAll(FENCE_GATES.blocks());
-        if (ModConfig.shouldGenerateFences()) blocks.addAll(FENCES.blocks());
-        if (ModConfig.shouldGenerateWalls()) blocks.addAll(WALLS.blocks());
-        if (ModConfig.shouldGenerateStairs()) blocks.addAll(STAIRS.blocks());
-        if (ModConfig.shouldGenerateSlabs()) blocks.addAll(SLABS.blocks());
+        blocks.addAll(FENCE_GATES.blocks());
+        blocks.addAll(FENCES.blocks());
+        blocks.addAll(WALLS.blocks());
+        blocks.addAll(STAIRS.blocks());
+        blocks.addAll(SLABS.blocks());
 
         return blocks;
     }

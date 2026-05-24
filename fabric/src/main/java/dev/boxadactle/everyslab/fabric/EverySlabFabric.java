@@ -1,11 +1,7 @@
 package dev.boxadactle.everyslab.fabric;
 
-import dev.boxadactle.everyslab.Constants;
-import dev.boxadactle.everyslab.EverySlab;
-import dev.boxadactle.everyslab.EverySlabBlockProvider;
-import dev.boxadactle.everyslab.ModConfig;
+import dev.boxadactle.everyslab.*;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,33 +23,14 @@ public class EverySlabFabric implements ModInitializer {
         Constants.LOG.info("Initializing EverySlab!");
         EverySlab.init();
 
-        if (ModConfig.shouldGenerateFenceGates()) EverySlab.FENCE_GATES.register(this::register);
-        if (ModConfig.shouldGenerateFences()) EverySlab.FENCES.register(this::register);
-        if (ModConfig.shouldGenerateSlabs()) EverySlab.SLABS.register(this::register);
-        if (ModConfig.shouldGenerateStairs()) EverySlab.STAIRS.register(this::register);
-        if (ModConfig.shouldGenerateWalls()) EverySlab.WALLS.register(this::register);
+        EverySlab.FENCE_GATES.register(this::register);
+        EverySlab.FENCES.register(this::register);
+        EverySlab.SLABS.register(this::register);
+        EverySlab.STAIRS.register(this::register);
+        EverySlab.WALLS.register(this::register);
 
         CreativeTabs.registerAll();
-
-        ItemGroupEvents.modifyEntriesEvent(CreativeTabs.FENCEGATE_GROUP_KEY).register(group -> {
-            EverySlab.FENCE_GATES.forEachBlock(group::accept);
-        });
-
-        ItemGroupEvents.modifyEntriesEvent(CreativeTabs.FENCE_GROUP_KEY).register(group -> {
-            EverySlab.FENCES.forEachBlock(group::accept);
-        });
-
-        ItemGroupEvents.modifyEntriesEvent(CreativeTabs.SLAB_GROUP_KEY).register(group -> {
-            EverySlab.SLABS.forEachBlock(group::accept);
-        });
-
-        ItemGroupEvents.modifyEntriesEvent(CreativeTabs.STAIR_GROUP_KEY).register(group -> {
-            EverySlab.STAIRS.forEachBlock(group::accept);
-        });
-
-        ItemGroupEvents.modifyEntriesEvent(CreativeTabs.WALL_GROUP_KEY).register(group -> {
-            EverySlab.WALLS.forEachBlock(group::accept);
-        });
+        CreativeTabs.addItems();
     }
 
     private Pair<Block, Item> register(ResourceLocation location, EverySlabBlockProvider blockFactory, Block base) {

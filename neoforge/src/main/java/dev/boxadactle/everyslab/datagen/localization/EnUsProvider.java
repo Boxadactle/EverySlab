@@ -19,6 +19,10 @@ public class EnUsProvider extends LanguageProvider {
         add("itemGroup.everyslab_stairs", "Stair Variants");
         add("itemGroup.everyslab_walls", "Wall Variants");
 
+        add("everyslab.registrydesync.1", "EverySlab's client registry is not the same as the server!");
+        add("everyslab.registrydesync.2", "Would you like to overwrite the client registry to join this server? (closes the game)");
+        add("everyslab.overwrite", "Overwrite");
+
         EverySlab.FILTERED_BLOCKS.forEach(base -> {
             ResourceLocation baseLocation = BuiltInRegistries.BLOCK.getKey(base);
             ResourceLocation hasFenceGate = EverySlab.FENCE_GATES.hasVariant(baseLocation) ? EverySlab.FENCE_GATES.fromBaseBlock(baseLocation) : null;

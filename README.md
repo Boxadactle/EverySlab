@@ -1,10 +1,10 @@
 # EverySlab
 
-> Adds 1000+ slabs, stairs, walls, fences, and fence gates for almost **every block** in the game — vanilla and beyond.
+> Adds 1000+ slabs, stairs, walls, fences, and fence gates for almost 300 blocks that were missing them!
 
 ![Minecraft](https://img.shields.io/badge/Minecraft-1.20%2B-brightgreen)
 ![Fabric/Neoforge](https://img.shields.io/badge/Loader-Fabric%20%7C%20Forge%20%7C%20NeoForge-blue)
-![License](https://img.shields.io/badge/License-MIT-purple)
+![License](https://img.shields.io/badge/License-GNU%20GPLv3-purple)
  
 ---
 

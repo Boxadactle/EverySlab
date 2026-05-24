@@ -1,7 +1,6 @@
 package dev.boxadactle.everyslab.mixin;
 
 import dev.boxadactle.everyslab.EverySlab;
-import dev.boxadactle.everyslab.ModConfig;
 import dev.boxadactle.everyslab.registry.*;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -37,11 +36,11 @@ public class ItemBlockRenderTypesMixin {
             Block hasStair = EverySlab.STAIRS.hasVariant(baseLocation) ? EverySlab.STAIRS.blockFromBaseBlock(baseLocation) : null;
             Block hasWall = EverySlab.WALLS.hasVariant(baseLocation) ? EverySlab.WALLS.blockFromBaseBlock(baseLocation) : null;
 
-            if (ModConfig.shouldGenerateFenceGates() && hasFenceGate != null) customRenderTypes.put(hasFenceGate, renderType);
-            if (ModConfig.shouldGenerateFences() && hasFence != null) customRenderTypes.put(hasFence, renderType);
-            if (ModConfig.shouldGenerateSlabs() && hasSlab != null) customRenderTypes.put(hasSlab, renderType);
-            if (ModConfig.shouldGenerateStairs() && hasSlab != null) customRenderTypes.put(hasStair, renderType);
-            if (ModConfig.shouldGenerateWalls() && hasWall != null) customRenderTypes.put(hasWall, renderType);
+            customRenderTypes.put(hasFenceGate, renderType);
+            customRenderTypes.put(hasFence, renderType);
+            customRenderTypes.put(hasSlab, renderType);
+            customRenderTypes.put(hasStair, renderType);
+            customRenderTypes.put(hasWall, renderType);
         });
 
         TYPE_BY_BLOCK.putAll(customRenderTypes);
