@@ -13,17 +13,36 @@
 Minecraft has always had a frustrating limitation: only a small subset of blocks with slab and stair variants. EverySlab fixes this by automatically generating slab, stair, wall, fence, and fence gate variants for almost every solid block in the game.
 
 No configuration needed. Just drop in the mod and every block gets its variants.
- 
+
+[![asulaq on PlanetMinecraft](https://boxadactle.dev/img/everyslab/build.png)](https://www.planetminecraft.com/project/small-medieval-village-house-6940008/)
+
 ---
 
 ## Features
 
-- **Universal coverage** — slab and stair variants are generated for every registered solid block
-- **Automatic recipes** — crafting table and stonecutter recipes are created for all new variants
-- **Inherited block properties** — hardness, blast resistance, tool type, harvest level, and sounds are copied from the parent block
-- **Creative tab integration** — variants appear in designated creative tabs
-- **Duplicate prevention** — blocks that already have official slab/stair variants are skipped automatically
-- **Opt-out config** — blacklist specific blocks or entire namespaces via the config file
+### Universal Coverage
+
+![living room build](https://boxadactle.dev/img/everyslab/living_room.png)
+
+Slab and stair variants are generated for every registered vanilla solid block. This includes all stone types, wood types, ores, and more.
+
+### Automatic Recipes
+
+![crafting magma stairs](https://boxadactle.dev/img/everyslab/crafting.png)
+
+Crafting table and stonecutter recipes are created for all new variants. Slabs are crafted from their full block, stairs from slabs, and walls/fences from their full block.
+
+### Inherited Block Properties and Behaviors
+
+![wow redstone](https://boxadactle.dev/img/everyslab/properties.png)
+
+Hardness, blast resistance, tool type, harvest level, sounds, and behaviors are copied from the parent block. As seen in the image, the "Redstone Stairs" activate the piston, and the "Redstone Lamp Slabs" are activated by the redstone block.
+
+### Creative Tab Integration
+
+![creative tabs](https://boxadactle.dev/img/everyslab/creative.png)
+
+Variants appear in designated creative tabs, separated by variant type. For example, all slabs are in the "Slab Variants" tab, while all stairs are in the "Stair Variants" tab.
 
 ---
 
@@ -45,36 +64,7 @@ No configuration needed. Just drop in the mod and every block gets its variants.
 | Quilt    | ✅ Supported | Requires QSL                   |
 | NeoForge | ✅ Supported | No extra dependencies          |
 
-EverySlab is fully compatible with other building and decoration mods. Blocks added by mods like Quark, Supplementaries, or Create will not receive variants.
- 
----
-
-## Configuration
-
-A config file is generated at `config/everyslab.toml` on first launch.
-
-```toml
-#Blacklist specific block IDs from receiving variants
-#Bedrock and Barriers are automatically blacklist
-#Example: ["minecraft:bedrock", "minecraft:barrier"]
-block_blacklist = []
-
-#Generate fence gate variants (default: true)
-generate_fence_gates = false
-
-#Generate fence variants (default: true)
-generate_fences = false
-
-#Generate slab variants (default: true)
-generate_slabs = true
-
-#Generate stair variants (default: true)
-generate_stairs = true
-
-# Generate wall variants (default: true)
-generate_walls = false
-
-```
+EverySlab does not add variants for other building mods such as like Quark, Supplementaries, or Create.
  
 ---
 
