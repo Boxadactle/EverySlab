@@ -3,7 +3,7 @@ plugins {
     id 'fabric-loom' version '1.10-SNAPSHOT' apply false
     // see https://projects.neoforged.net/neoforged/moddevgradle for new versions
     id 'net.neoforged.moddev' version '2.0.62-beta' apply false
-    id "me.shedaniel.unified-publishing" version "0.1.+"
+    id "me.modmuss50.mod-publish-plugin" version "0.8.4"
     id "com.github.breadmoirai.github-release" version "2.5.2"
 }
 
@@ -11,4 +11,81 @@ allprojects {
     repositories {
         mavenCentral()
     }
+}
+
+publishMods {
+    changelog = new File(rootProject.rootDir, project.changelog_file).text
+    type = STABLE
+
+    def cfOptions = curseforgeOptions {
+        accessToken = System.getenv("CURSEFORGE_TOKEN")
+        projectId = project.project_id_curseforge
+        minecraftVersions.addAll(project.game_versions.split(","))
+        changelogType = "markdown"
+        javaVersions.add(JavaVersion.current())
+    }
+
+    def mrOptions = modrinthOptions {
+        accessToken = System.getenv("MODRINTH_TOKEN")
+        projectId = project.project_id_modrinth
+        minecraftVersions.addAll(project.game_versions.split(","))
+    }
+
+    curseforge("curseforgeFabric") {
+        from cfOptions
+        file project(":fabric")
+        modLoaders.addAll("fabric", "quilt")
+        requires {
+            slug = "fabric-api"
+        }
+        displayName = "[Fabric ${project.minecraft_version}] v${project.version}"
+    }
+
+    curseforge("curseforgeNeoforge") {
+        from cfOptions
+        file project(":neoforge")
+        modLoaders.add("neoforge")
+        displayName = "[Neoforge ${project.minecraft_version}] v${project.version}"
+    }
+
+    modrinth("modrinthFabric") {
+        from mrOptions
+        file project(":fabric")
+        modLoaders.addAll("fabric", "quilt")
+        requires {
+            slug = "fabric-api"
+        }
+        displayName = "[Fabric ${project.minecraft_version}] v${project.version}"
+    }
+
+    modrinth("modrinthNeoforge") {
+        from mrOptions
+        file project(":neoforge")
+        modLoaders.add("neoforge")
+        displayName = "[Neoforge ${project.minecraft_version}] v${project.version}"
+    }
+}
+
+githubRelease {
+    owner = "Boxadactle"
+    repo = "EverySlab"
+    tagName = "$project.version"
+    targetCommitish = "dev"
+    releaseName = "${mod_name} $project.version"
+    generateReleaseNotes = true
+    body = """${mod_name} $project.version for Minecraft $minecraft_version
+
+${new File(rootProject.rootDir, project.changelog_file).text}
+"""
+    authorization = "Token ${System.getenv("GITHUB_TOKEN")}"
+
+    var files = []
+    for (String platform : project.enabled_platforms.split(',')) {
+        files += fileTree("$platform/build/libs") {
+            include "*$project.version*"
+        }
+    }
+    releaseAssets = files
+
+//    dryRun = true
 }
