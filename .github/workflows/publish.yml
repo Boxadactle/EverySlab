@@ -27,8 +27,11 @@ jobs:
       - name: Set up gradlew
         run: chmod +x ./gradlew
 
+      - name: Generate Data with Gradle
+        run: ./gradlew build runData
+
       - name: Build and Publish with Gradle
-        run: ./gradlew runData build publishUnified
+        run: ./gradlew build publishUnified
         env:
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
