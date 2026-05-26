@@ -1,7 +1,6 @@
 package dev.boxadactle.everyslab.datagen;
 
 import dev.boxadactle.everyslab.EverySlab;
-import dev.boxadactle.everyslab.registry.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -28,42 +27,62 @@ public class RecipeGenerator extends RecipeProvider {
             ResourceLocation hasStair = EverySlab.STAIRS.hasVariant(baseLocation) ? EverySlab.STAIRS.fromBaseBlock(baseLocation) : null;
             ResourceLocation hasWall = EverySlab.WALLS.hasVariant(baseLocation) ? EverySlab.WALLS.fromBaseBlock(baseLocation) : null;
 
-            if (hasFenceGate != null) shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.FENCE_GATES.getBlock(hasFenceGate), 2)
-                    .pattern("/B/")
-                    .pattern("/B/")
-                    .define('/', Items.STICK)
-                    .define('B', base)
-                    .unlockedBy(getHasName(Items.CRAFTING_TABLE), has(Items.CRAFTING_TABLE))
-                    .save(output);
+            if (hasFenceGate != null) {
+                stonecutterResultFromBase(RecipeCategory.BUILDING_BLOCKS, EverySlab.FENCE_GATES.getBlock(hasFenceGate), base);
 
-            if (hasFence != null) shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.FENCES.getBlock(hasFence), 2)
-                    .pattern("B/B")
-                    .pattern("B/B")
-                    .define('/', Items.STICK)
-                    .define('B', base)
-                    .unlockedBy(getHasName(Items.CRAFTING_TABLE), has(Items.CRAFTING_TABLE))
-                    .save(output);
+                shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.FENCE_GATES.getBlock(hasFenceGate), 2)
+                        .pattern("/B/")
+                        .pattern("/B/")
+                        .define('/', Items.STICK)
+                        .define('B', base)
+                        .unlockedBy(getHasName(Items.CRAFTING_TABLE), has(Items.CRAFTING_TABLE))
+                        .save(output);
+            }
 
-            if (hasSlab != null) shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.SLABS.getBlock(hasSlab), 6)
-                    .pattern("BBB")
-                    .define('B', base)
-                    .unlockedBy(getHasName(Items.CRAFTING_TABLE), has(Items.CRAFTING_TABLE))
-                    .save(output);
+            if (hasFence != null) {
+                stonecutterResultFromBase(RecipeCategory.BUILDING_BLOCKS, EverySlab.FENCES.getBlock(hasFence), base);
 
-            if (hasStair != null) shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.STAIRS.getBlock(hasStair), 4)
-                    .pattern("B  ")
-                    .pattern("BB ")
-                    .pattern("BBB")
-                    .define('B', base)
-                    .unlockedBy(getHasName(Items.CRAFTING_TABLE), has(Items.CRAFTING_TABLE))
-                    .save(output);
+                shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.FENCES.getBlock(hasFence), 2)
+                        .pattern("B/B")
+                        .pattern("B/B")
+                        .define('/', Items.STICK)
+                        .define('B', base)
+                        .unlockedBy(getHasName(Items.CRAFTING_TABLE), has(Items.CRAFTING_TABLE))
+                        .save(output);
+            }
 
-            if (hasWall != null) shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.WALLS.getBlock(hasWall), 6)
-                    .pattern("BBB")
-                    .pattern("BBB")
-                    .define('B', base)
-                    .unlockedBy(getHasName(Items.CRAFTING_TABLE), has(Items.CRAFTING_TABLE))
-                    .save(output);
+            if (hasSlab != null) {
+                stonecutterResultFromBase(RecipeCategory.BUILDING_BLOCKS, EverySlab.SLABS.getBlock(hasSlab), base, 2);
+
+                shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.SLABS.getBlock(hasSlab), 6)
+                        .pattern("BBB")
+                        .define('B', base)
+                        .unlockedBy(getHasName(Items.CRAFTING_TABLE), has(Items.CRAFTING_TABLE))
+                        .save(output);
+            }
+
+            if (hasStair != null) {
+                stonecutterResultFromBase(RecipeCategory.BUILDING_BLOCKS, EverySlab.STAIRS.getBlock(hasStair), base);
+
+                shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.STAIRS.getBlock(hasStair), 4)
+                        .pattern("B  ")
+                        .pattern("BB ")
+                        .pattern("BBB")
+                        .define('B', base)
+                        .unlockedBy(getHasName(Items.CRAFTING_TABLE), has(Items.CRAFTING_TABLE))
+                        .save(output);
+            }
+
+            if (hasWall != null) {
+                stonecutterResultFromBase(RecipeCategory.BUILDING_BLOCKS, EverySlab.WALLS.getBlock(hasWall), base);
+
+                shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.WALLS.getBlock(hasWall), 6)
+                        .pattern("BBB")
+                        .pattern("BBB")
+                        .define('B', base)
+                        .unlockedBy(getHasName(Items.CRAFTING_TABLE), has(Items.CRAFTING_TABLE))
+                        .save(output);
+            }
         });
     }
 

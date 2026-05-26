@@ -14,7 +14,7 @@ public class EsEsProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         // load the correct language, so the block names translate correctly
-        //                your locale code       reads right to left? (Arabic/Hebrew etc)
+        //                your locale code       reads right to left? (Arabic/Hebrew etc.)
         LangUtil.injectLanguage("es_es", false);
 
         // Creative tab names
@@ -23,11 +23,6 @@ public class EsEsProvider extends LanguageProvider {
         add("itemGroup.everyslab_slabs", "Variantes de losa");
         add("itemGroup.everyslab_stairs", "Variantes de escaleras");
         add("itemGroup.everyslab_walls", "Variantes de muro");
-
-        // registry messages
-        add("everyslab.registrydesync.1", "¡El registro de clientes de EverySlab no es el mismo que el del servidor!");
-        add("everyslab.registrydesync.2", "¿Quieres sobrescribir el registro del cliente para conectarte a este servidor? (se cierra el juego)");
-        add("everyslab.overwrite", "Sobrescribir");
 
         // Block name suffixes — these are appended to the base block's translated name
         EverySlab.FILTERED_BLOCKS.forEach(base -> {
