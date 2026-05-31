@@ -18,53 +18,39 @@ Navigate to `neoforge/src/main/java/dev/boxadactle/everyslab/datagen/` and creat
 Use the following template, replacing `es_es` with your locale code and updating the block name translations accordingly:
 
 ```java
-package dev.boxadactle.everyslab.datagen;
-
-import dev.boxadactle.everyslab.EverySlab;
-import dev.boxadactle.everyslab.datagen.localization.LangUtil;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.data.LanguageProvider;
-
-public class EsEsProvider extends LanguageProvider {
-    public EsEsProvider(PackOutput output) {
-        super(output, EverySlab.MOD_ID, "es_es"); // <-- your locale code here
+public class EsEsProvider extends FabricLanguageProvider {
+    public EsEsProvider(FabricDataOutput output) {
+        super(output, "es_es"); // <-- your locale code here
     }
 
     @Override
-    protected void addTranslations() {
+    public void generateTranslations(TranslationBuilder translationBuilder) {
         // load the correct language, so the block names translate correctly
-        //             your locale code    reads right to left? (Arabic/Hebrew etc.)
+        //                your locale code       reads right to left? (Arabic/Hebrew etc.)
         LangUtil.injectLanguage("es_es", false);
 
         // Creative tab names
-        add("itemGroup.everyslab_fencegates", "Variantes de puerta de valla");
-        add("itemGroup.everyslab_fences", "Variantes de valla");
-        add("itemGroup.everyslab_slabs", "Variantes de losa");
-        add("itemGroup.everyslab_stairs", "Variantes de escaleras");
-        add("itemGroup.everyslab_walls", "Variantes de muro");
+        translationBuilder.add("itemGroup.everyslab_fencegates", "Variantes de puerta de valla");
+        translationBuilder.add("itemGroup.everyslab_fences", "Variantes de valla");
+        translationBuilder.add("itemGroup.everyslab_slabs", "Variantes de losa");
+        translationBuilder.add("itemGroup.everyslab_stairs", "Variantes de escaleras");
+        translationBuilder.add("itemGroup.everyslab_walls", "Variantes de muro");
 
         // Block name suffixes — these are appended to the base block's translated name
         EverySlab.FILTERED_BLOCKS.forEach(base -> {
             ResourceLocation baseLocation = BuiltInRegistries.BLOCK.getKey(base);
             ResourceLocation hasFenceGate = EverySlab.FENCE_GATES.hasVariant(baseLocation) ? EverySlab.FENCE_GATES.fromBaseBlock(baseLocation) : null;
-            ResourceLocation hasFence = EverySlab.FENCES.hasVariant(baseLocation) ? EverySlab.FENCES.fromBaseBlock(baseLocation) : null;
-            ResourceLocation hasSlab = EverySlab.SLABS.hasVariant(baseLocation) ? EverySlab.SLABS.fromBaseBlock(baseLocation) : null;
-            ResourceLocation hasStair = EverySlab.STAIRS.hasVariant(baseLocation) ? EverySlab.STAIRS.fromBaseBlock(baseLocation) : null;
-            ResourceLocation hasWall = EverySlab.WALLS.hasVariant(baseLocation) ? EverySlab.WALLS.fromBaseBlock(baseLocation) : null;
+            ResourceLocation hasFence    = EverySlab.FENCES.hasVariant(baseLocation)      ? EverySlab.FENCES.fromBaseBlock(baseLocation)      : null;
+            ResourceLocation hasSlab     = EverySlab.SLABS.hasVariant(baseLocation)       ? EverySlab.SLABS.fromBaseBlock(baseLocation)        : null;
+            ResourceLocation hasStair    = EverySlab.STAIRS.hasVariant(baseLocation)      ? EverySlab.STAIRS.fromBaseBlock(baseLocation)       : null;
+            ResourceLocation hasWall     = EverySlab.WALLS.hasVariant(baseLocation)       ? EverySlab.WALLS.fromBaseBlock(baseLocation)        : null;
 
             // Adjust the suffix strings to match your language's grammar
-            if (hasFenceGate != null)
-                add(EverySlab.FENCE_GATES.getBlockItem(hasFenceGate), String.format("Puerta de valla de %s", base.getName().getString()));
-            if (hasFence != null)
-                add(EverySlab.FENCES.getBlockItem(hasFence), String.format("Valla de  %s", base.getName().getString()));
-            if (hasSlab != null)
-                add(EverySlab.SLABS.getBlockItem(hasSlab), String.format("Losa de %s", base.getName().getString()));
-            if (hasStair != null)
-                add(EverySlab.STAIRS.getBlockItem(hasStair), String.format("Escaleras de %s", base.getName().getString()));
-            if (hasWall != null)
-                add(EverySlab.WALLS.getBlockItem(hasWall), String.format("Muro de %s", base.getName().getString()));
+            if (hasFenceGate != null) translationBuilder.add(EverySlab.FENCE_GATES.getBlockItem(hasFenceGate), String.format("Puerta de valla de %s", base.getName().getString()));
+            if (hasFence     != null) translationBuilder.add(EverySlab.FENCES.getBlockItem(hasFence),           String.format("Valla de  %s",     base.getName().getString()));
+            if (hasSlab      != null) translationBuilder.add(EverySlab.SLABS.getBlockItem(hasSlab),             String.format("Losa de %s",      base.getName().getString()));
+            if (hasStair     != null) translationBuilder.add(EverySlab.STAIRS.getBlockItem(hasStair),           String.format("Escaleras de %s",    base.getName().getString()));
+            if (hasWall      != null) translationBuilder.add(EverySlab.WALLS.getBlockItem(hasWall),             String.format("Muro de %s",      base.getName().getString()));
         });
 
         // make sure to restore the original language for other language localizations
@@ -84,18 +70,26 @@ Open `EverySlabNeoforge.java` (the mod's main NeoForge class) and find the `Gath
 ```java
 @SubscribeEvent
 public static void gatherData(GatherDataEvent.Client event) {
-    event.createProvider(ModelGenerator::new);
-    event.createProvider(BlockTagsGenerator::new);
-    event.createProvider((output, lookupProvider) -> new LootTableProvider(output, Set.of(), List.of(new LootTableProvider.SubProviderEntry(
-            LootTableGenerator::new,
-            LootContextParamSets.BLOCK
-    )), lookupProvider));
-    event.createProvider(RecipeGenerator.Runner::new);
+    DataGenerator generator = event.getGenerator();
+    PackOutput output = generator.getPackOutput();
+    CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+    ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+
+    event.getGenerator().addProvider(event.includeServer(), new BlockTagsGenerator(output, lookupProvider, existingFileHelper));
+    event.getGenerator().addProvider(event.includeServer(), (DataProvider.Factory<LootTableProvider>) packOutput -> new LootTableProvider(
+            packOutput,
+            Collections.emptySet(),
+            List.of(new LootTableProvider.SubProviderEntry(LootTableGenerator::new, LootContextParamSets.BLOCK))
+    ));
+    event.getGenerator().addProvider(event.includeServer(), new RecipeGenerator(output));
+    event.getGenerator().addProvider(event.includeServer(), new BlockListGenerator(output));
+
+    event.getGenerator().addProvider(event.includeClient(), new ModelGenerator(output, existingFileHelper));
 
     // language providers
-    event.createProvider(EnUsProvider::new);
+    event.getGenerator().addProvider(event.includeClient(), new EnUsProvider(output));
     // Add your provider on the line below ↓
-    generator.addProvider(EsEsProvider::new);
+    event.getGenerator().addProvider(event.includeClient(), new EsEsProvider(output));
 }
 ```
 

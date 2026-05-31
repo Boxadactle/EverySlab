@@ -25,20 +25,20 @@ public class EverySlab {
 
     public static List<Block> FILTERED_BLOCKS = new ArrayList<>();
 
-    public static final VariantRegistry FENCE_GATES = new FenceGateRegistry();
-    public static final VariantRegistry FENCES = new FenceRegistry();
-    public static final VariantRegistry SLABS = new SlabRegistry();
-    public static final VariantRegistry STAIRS = new StairRegistry();
-    public static final VariantRegistry WALLS = new WallRegistry();
+    public static final VariantRegistry<FenceGateBlock> FENCE_GATES = new FenceGateRegistry();
+    public static final VariantRegistry<FenceBlock> FENCES = new FenceRegistry();
+    public static final VariantRegistry<SlabBlock> SLABS = new SlabRegistry();
+    public static final VariantRegistry<StairBlock> STAIRS = new StairRegistry();
+    public static final VariantRegistry<WallBlock> WALLS = new WallRegistry();
 
     static {
         FILTERED_BLOCKS.add(Blocks.REDSTONE_BLOCK);
-        FILTERED_BLOCKS.add(Blocks.REDSTONE_LAMP);
     }
 
     public static void init() {
         List<Block> generated = getGeneratedBlocksIfExists();
         if (generated == null) BuiltInRegistries.BLOCK.forEach(block -> {
+            if (BuiltInRegistries.BLOCK.getKey(block).getPath().contains("redstone_lamp")) return;
             ResourceLocation blo = BuiltInRegistries.BLOCK.getKey(block);
 
             // maybe this will be a feature one day
@@ -71,7 +71,7 @@ public class EverySlab {
             JsonArray generated = json.getAsJsonArray("generated");
 
             List<Block> blocks = new ArrayList<>();
-            generated.asList().forEach(id -> blocks.add(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(id.getAsString()))));
+            generated.asList().forEach(id -> blocks.add(BuiltInRegistries.BLOCK.get(new ResourceLocation(id.getAsString()))));
 
             return blocks;
         } catch (Exception e) {
@@ -91,15 +91,15 @@ public class EverySlab {
         return blocks;
     }
 
-    public abstract static class VariantRegistry {
+    public abstract static class VariantRegistry<T extends Block> {
 
-        protected final HashMap<ResourceLocation, Pair<EverySlabBlockProvider, Block>> VARIANTS = new HashMap<>();
+        protected final HashMap<ResourceLocation, Pair<EverySlabBlockProvider<T>, Block>> VARIANTS = new HashMap<>();
 
         protected HashMap<ResourceLocation, ResourceLocation> VARIANT_BASE = new HashMap<>();
-        protected HashMap<ResourceLocation, Block> VARIANT_REGISTRY = new HashMap<>();
+        protected HashMap<ResourceLocation, T> VARIANT_REGISTRY = new HashMap<>();
         protected HashMap<ResourceLocation, Item> VARIANT_ITEM_REGISTRY = new HashMap<>();
 
-        protected abstract EverySlabBlockProvider getProvider();
+        protected abstract EverySlabBlockProvider<T> getProvider();
 
         protected abstract String append();
 
@@ -116,30 +116,36 @@ public class EverySlab {
             String str = location.toString();
             if (alreadyExists(block)) return;
             if (
-                    BuiltInRegistries.BLOCK.get(ResourceLocation.parse(str + append())).isEmpty() &&
-                    BuiltInRegistries.BLOCK.get(ResourceLocation.parse(str.substring(0, str.length() - 1) + append())).isEmpty()
+                    BuiltInRegistries.BLOCK.get(new ResourceLocation(str + append())).equals(Blocks.AIR) &&
+                    BuiltInRegistries.BLOCK.get(new ResourceLocation(str.substring(0, str.length() - 1) + append())).equals(Blocks.AIR)
             ) createVariant(block, getProvider());
         }
 
-        public void createVariant(Block block, EverySlabBlockProvider provider) {
+        public void createVariant(Block block, EverySlabBlockProvider<T> provider) {
             ResourceLocation location = BuiltInRegistries.BLOCK.getKey(block);
-            ResourceLocation location1 = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, location.getPath() + append());
+            ResourceLocation location1 = new ResourceLocation(Constants.MOD_ID, location.getPath() + append());
             VARIANTS.put(location1, new Pair<>(provider, block));
             VARIANT_BASE.put(location1, location);
         }
 
-        public void register(BlockRegister blockRegister) {
+        public void register(BlockRegister<T> blockRegister) {
             VARIANTS.forEach((resourceLocation, data) -> {
-                Pair<Block, Item> reg = blockRegister.registerBlock(resourceLocation, data.getA(), data.getB());
-                VARIANT_REGISTRY.put(resourceLocation, reg.getA());
-                VARIANT_ITEM_REGISTRY.put(resourceLocation, reg.getB());
+                if (resourceLocation.getPath().contains("redstone_lamp")) return;
+                try {
+                    Pair<T, Item> reg = blockRegister.registerBlock(resourceLocation, data.getA(), data.getB());
+                    VARIANT_REGISTRY.put(resourceLocation, reg.getA());
+                    VARIANT_ITEM_REGISTRY.put(resourceLocation, reg.getB());
+                } catch (Exception e) {
+                    Constants.LOG.error("Failed to register block {}: {}", resourceLocation, e.getMessage());
+                }
             });
         }
 
-        public void registerBlocks(BlockRegister.OnlyBlock blockRegister) {
+        public void registerBlocks(BlockRegister.OnlyBlock<T> blockRegister) {
             VARIANTS.forEach((resourceLocation, data) -> {
+                if (resourceLocation.getPath().contains("redstone_lamp")) return;
                 ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, resourceLocation);
-                Block block = data.getA().getVariant(data.getB(), key);
+                T block = data.getA().getVariant(data.getB());
                 blockRegister.registerBlock(key, block);
                 VARIANT_REGISTRY.put(resourceLocation, block);
             });
@@ -147,15 +153,16 @@ public class EverySlab {
 
         public void registerItems(BlockRegister.OnlyBlockItem itemRegister) {
             VARIANTS.forEach((resourceLocation, data) -> {
+                if (resourceLocation.getPath().contains("redstone_lamp")) return;
                 ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, resourceLocation);
                 Block block = VARIANT_REGISTRY.get(resourceLocation);
-                Item item = new BlockItem(block, new Item.Properties().setId(key));
+                Item item = new BlockItem(block, new Item.Properties());
                 itemRegister.registerItem(key, item);
                 VARIANT_ITEM_REGISTRY.put(resourceLocation, item);
             });
         }
 
-        public Block getBlock(ResourceLocation location) {
+        public T getBlock(ResourceLocation location) {
             return VARIANT_REGISTRY.get(location);
         }
 
@@ -172,7 +179,7 @@ public class EverySlab {
         }
 
         public Block getBaseBlock(ResourceLocation location) {
-            return BuiltInRegistries.BLOCK.get(VARIANT_BASE.get(location)).get().value();
+            return BuiltInRegistries.BLOCK.get(VARIANT_BASE.get(location));
         }
 
         public ResourceLocation fromBaseBlock(ResourceLocation location) {
@@ -184,7 +191,7 @@ public class EverySlab {
             return null;
         }
 
-        public Block blockFromBaseBlock(ResourceLocation location) {
+        public T blockFromBaseBlock(ResourceLocation location) {
             return getBlock(fromBaseBlock(location));
         }
 
@@ -201,7 +208,7 @@ public class EverySlab {
         }
 
         protected ResourceLocation id(String path) {
-            return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, path);
+            return new ResourceLocation(Constants.MOD_ID, path);
         }
     }
 }

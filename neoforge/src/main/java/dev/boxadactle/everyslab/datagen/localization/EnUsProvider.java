@@ -1,5 +1,6 @@
 package dev.boxadactle.everyslab.datagen.localization;
 
+import dev.boxadactle.everyslab.Constants;
 import dev.boxadactle.everyslab.EverySlab;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -8,7 +9,7 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 
 public class EnUsProvider extends LanguageProvider {
     public EnUsProvider(PackOutput output) {
-        super(output, EverySlab.MOD_ID, "en_us");
+        super(output, Constants.MOD_ID, "en_us");
     }
 
     @Override
@@ -20,6 +21,7 @@ public class EnUsProvider extends LanguageProvider {
         add("itemGroup.everyslab_walls", "Wall Variants");
 
         EverySlab.FILTERED_BLOCKS.forEach(base -> {
+            if (BuiltInRegistries.BLOCK.getKey(base).getPath().contains("lamp")) return;
             ResourceLocation baseLocation = BuiltInRegistries.BLOCK.getKey(base);
             ResourceLocation hasFenceGate = EverySlab.FENCE_GATES.hasVariant(baseLocation) ? EverySlab.FENCE_GATES.fromBaseBlock(baseLocation) : null;
             ResourceLocation hasFence = EverySlab.FENCES.hasVariant(baseLocation) ? EverySlab.FENCES.fromBaseBlock(baseLocation) : null;

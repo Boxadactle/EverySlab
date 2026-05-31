@@ -9,16 +9,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class RedstoneWall extends WallVariant {
-    public RedstoneWall(Block block, ResourceKey<Block> id) {
-        super(block, id);
+    public RedstoneWall(Block block) {
+        super(block);
     }
 
-    protected boolean isSignalSource(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
 
-    protected int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-        // 1/3 of full redstone block
-        return 5;
+    public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return 10;
     }
 }

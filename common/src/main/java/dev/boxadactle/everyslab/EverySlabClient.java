@@ -3,7 +3,7 @@ package dev.boxadactle.everyslab;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.boxadactle.everyslab.mixin.BlockStateInvoker;
-import net.minecraft.client.data.models.model.ModelLocationUtils;
+import net.minecraft.data.models.model.ModelLocationUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;

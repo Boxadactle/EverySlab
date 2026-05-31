@@ -6,19 +6,19 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class RedstoneFence extends FenceVariant {
-    public RedstoneFence(Block block, ResourceKey<Block> id) {
-        super(block, id);
+    public RedstoneFence(Block block) {
+        super(block);
     }
 
-    protected boolean isSignalSource(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
 
-    protected int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-        // 1/3 of full block
-        return 5;
+    public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return 8;
     }
 }

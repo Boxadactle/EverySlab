@@ -1,2 +1,2 @@
 ## Changelog
-- Initial release
+- Update 1.20.4

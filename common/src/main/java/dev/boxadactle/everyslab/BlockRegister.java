@@ -7,11 +7,11 @@ import net.minecraft.world.level.block.Block;
 import oshi.util.tuples.Pair;
 
 @FunctionalInterface
-public interface BlockRegister {
-    Pair<Block, Item> registerBlock(ResourceLocation location, EverySlabBlockProvider blockProvider, Block block);
+public interface BlockRegister<T extends Block> {
+    Pair<T, Item> registerBlock(ResourceLocation location, EverySlabBlockProvider<T> blockProvider, Block block);
 
-    interface OnlyBlock {
-        void registerBlock(ResourceKey<Block> key, Block block);
+    interface OnlyBlock<T extends Block> {
+        void registerBlock(ResourceKey<Block> key, T block);
     }
 
     interface OnlyBlockItem {

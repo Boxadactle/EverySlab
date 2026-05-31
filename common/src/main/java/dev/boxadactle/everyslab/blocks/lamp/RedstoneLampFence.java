@@ -2,52 +2,54 @@ package dev.boxadactle.everyslab.blocks.lamp;
 
 import dev.boxadactle.everyslab.variants.FenceVariant;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RedstoneTorchBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.redstone.Orientation;
 
 public class RedstoneLampFence extends FenceVariant {
-    public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
+    public static final BooleanProperty LIT;
 
-    public RedstoneLampFence(Block block, ResourceKey<Block> id) {
-        super(block, id);
+    public RedstoneLampFence(Block block) {
+        super(block);
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return super.getStateForPlacement(context).setValue(LIT, context.getLevel().hasNeighborSignal(context.getClickedPos()));
     }
 
-    protected void neighborChanged(BlockState p_55666_, Level p_55667_, BlockPos p_55668_, Block p_55669_,  Orientation p_364297_, boolean p_55671_) {
-        if (!p_55667_.isClientSide) {
-            boolean flag = p_55666_.getValue(LIT);
-            if (flag != p_55667_.hasNeighborSignal(p_55668_)) {
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        if (!level.isClientSide) {
+            boolean flag = state.getValue(LIT);
+            if (flag != level.hasNeighborSignal(pos)) {
                 if (flag) {
-                    p_55667_.scheduleTick(p_55668_, this, 4);
+                    level.scheduleTick(pos, this, 4);
                 } else {
-                    p_55667_.setBlock(p_55668_, p_55666_.cycle(LIT), 2);
+                    level.setBlock(pos, state.cycle(LIT), 2);
                 }
             }
         }
-        super.neighborChanged(p_55666_, p_55667_, p_55668_, p_55669_, p_364297_, p_55671_);
+        super.neighborChanged(state, level, pos, block, fromPos, isMoving);
+
     }
 
-    protected void tick(BlockState p_221937_, ServerLevel p_221938_, BlockPos p_221939_, RandomSource p_221940_) {
-        if (p_221937_.getValue(LIT) && !p_221938_.hasNeighborSignal(p_221939_)) {
-            p_221938_.setBlock(p_221939_, p_221937_.cycle(LIT), 2);
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (state.getValue(LIT) && !level.hasNeighborSignal(pos)) {
+            level.setBlock(pos, state.cycle(LIT), 2);
         }
-        super.tick(p_221937_, p_221938_, p_221939_, p_221940_);
+        super.tick(state, level, pos, random);
+
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(LIT);
-        super.createBlockStateDefinition(builder);
+    }
+
+    static {
+        LIT = RedstoneTorchBlock.LIT;
     }
 }

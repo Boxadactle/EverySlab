@@ -11,25 +11,38 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.apache.commons.lang3.function.TriConsumer;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class BlockTagsGenerator extends BlockTagsProvider {
-    public BlockTagsGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        super(output, lookupProvider, EverySlab.MOD_ID);
+    public BlockTagsGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
+        super(output, lookupProvider, Constants.MOD_ID, existingFileHelper);
     }
 
     private HashMap<String, List<String>> tagCache = new HashMap<>();
+
+    private ResourceKey<Block> getBlockKey(Block block) {
+        return BuiltInRegistries.BLOCK.getResourceKey(block).orElseThrow();
+    }
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -46,6 +59,7 @@ public class BlockTagsGenerator extends BlockTagsProvider {
         loadTag("needs_stone_tool");
 
         EverySlab.FILTERED_BLOCKS.forEach(base -> {
+            if (BuiltInRegistries.BLOCK.getKey(base).getPath().contains("lamp")) return;
             ResourceLocation baseLocation = BuiltInRegistries.BLOCK.getKey(base);
             Block hasFenceGate = EverySlab.FENCE_GATES.hasVariant(baseLocation) ? EverySlab.FENCE_GATES.blockFromBaseBlock(baseLocation) : null;
             Block hasFence = EverySlab.FENCES.hasVariant(baseLocation) ? EverySlab.FENCES.blockFromBaseBlock(baseLocation) : null;
@@ -54,57 +68,73 @@ public class BlockTagsGenerator extends BlockTagsProvider {
             Block hasWall = EverySlab.WALLS.hasVariant(baseLocation) ? EverySlab.WALLS.blockFromBaseBlock(baseLocation) : null;
 
             TriConsumer<Block, MiningLevel, MiningTool> addMiningTags = ((block, miningLevel, miningTool) -> {
-                if (miningLevel != null) tag(miningLevel.tag).add(block);
-                if (miningTool != null) tag(miningTool.tag).add(block);
+                if (miningLevel != null) tag(miningLevel.tag).add(getBlockKey(block));
+                if (miningTool != null) tag(miningTool.tag).add(getBlockKey(block));
             });
 
             MiningLevel level = getCorrectMiningLevel(base);
             MiningTool tool = getCorrectTool(base);
 
             if (hasFenceGate != null) {
-                tag(BlockTags.FENCE_GATES).add(hasFenceGate);
+                tag(BlockTags.FENCE_GATES).add(getBlockKey(hasFenceGate));
                 addMiningTags.accept(hasFenceGate, level, tool);
             }
 
             if (hasFence != null) {
-                tag(BlockTags.FENCES).add(hasFence);
+                tag(BlockTags.FENCES).add(getBlockKey(hasFence));
                 addMiningTags.accept(hasFence, level, tool);
             }
 
             if (hasSlab != null) {
-                tag(BlockTags.SLABS).add(hasSlab);
+                tag(BlockTags.SLABS).add(getBlockKey(hasSlab));
                 addMiningTags.accept(hasSlab, level, tool);
             }
 
             if (hasStair != null) {
-                tag(BlockTags.STAIRS).add(hasStair);
+                tag(BlockTags.STAIRS).add(getBlockKey(hasStair));
                 addMiningTags.accept(hasStair, level, tool);
             }
 
             if (hasWall != null) {
-                tag(BlockTags.WALLS).add(hasWall);
+                tag(BlockTags.WALLS).add(getBlockKey(hasWall));
                 addMiningTags.accept(hasWall, level, tool);
             }
         });
     }
 
     public void loadTag(String tag) {
-        String path = "data/minecraft/tags/block/" + tag + ".json";
-        try (InputStream is = Minecraft.class.getClassLoader().getResourceAsStream(path)) {
-            if (is == null) return;
-            JsonObject object = JsonParser.parseReader(new InputStreamReader(is)).getAsJsonObject();
-            JsonArray blocks = object.getAsJsonArray("values");
-            if (blocks != null && !blocks.isEmpty()) {
-                Constants.LOG.info("Loaded tag " + tag + " with " + blocks.size() + " blocks.");
-                tagCache.put(tag, blocks.asList().stream().map(JsonElement::getAsString).toList());
-                return;
-            } else {
-                Constants.LOG.info("Loaded tag " + tag + " with no blocks.");
+        // this is so unconventional
+        String url = "https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/refs/heads/" + Constants.MC_VERSION + "/data/minecraft/tags/blocks/" + tag + ".json";
+
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URI(url).toURL().openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+
+            int status = connection.getResponseCode();
+            if (status != 200) {
+                Constants.LOG.error("Failed to fetch lang file from GitHub: HTTP {}", status);
             }
 
-        } catch (Exception ignored) {
+            try (InputStream is = connection.getInputStream()) {
+                JsonObject object = GsonHelper.parse(new InputStreamReader(is, StandardCharsets.UTF_8));
+                JsonArray blocks = object.getAsJsonArray("values");
+                if (blocks != null && !blocks.isEmpty()) {
+                    Constants.LOG.info("Loaded tag " + tag + " with " + blocks.size() + " blocks.");
+                    tagCache.put(tag, blocks.asList().stream().map(JsonElement::getAsString).toList());
+                    return;
+                } else {
+                    Constants.LOG.info("Loaded tag " + tag + " with no blocks.");
+                }
+            }
+
+            connection.disconnect();
+        } catch (IOException e) {
+            Constants.LOG.error("Failed to fetch lang file from GitHub for version {} locale {}", Constants.MC_VERSION, tag, e);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
-        tagCache.put(tag, List.of());
     }
 
     private MiningTool getCorrectTool(Block baseBlock) {

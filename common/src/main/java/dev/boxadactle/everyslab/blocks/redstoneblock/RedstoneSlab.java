@@ -9,16 +9,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class RedstoneSlab extends SlabVariant {
-    public RedstoneSlab(Block block, ResourceKey<Block> id) {
-        super(block, id);
+    public RedstoneSlab(Block block) {
+        super(block);
     }
 
-    protected boolean isSignalSource(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
 
-    protected int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-        // half of a full redstone block
+    public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return 8;
     }
 }

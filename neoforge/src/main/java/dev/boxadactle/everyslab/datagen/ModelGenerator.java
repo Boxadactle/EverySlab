@@ -1,28 +1,21 @@
 package dev.boxadactle.everyslab.datagen;
 
+import dev.boxadactle.everyslab.Constants;
 import dev.boxadactle.everyslab.EverySlab;
-import dev.boxadactle.everyslab.registry.*;
-import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.ItemModelGenerators;
-import net.minecraft.client.data.models.ModelProvider;
-import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-public class ModelGenerator extends ModelProvider {
-    public ModelGenerator(PackOutput output) {
-        super(output, EverySlab.MOD_ID);
+public class ModelGenerator extends BlockStateProvider {
+    public ModelGenerator(PackOutput output, ExistingFileHelper exFileHelper) {
+        super(output, Constants.MOD_ID, exFileHelper);
     }
 
     @Override
-    protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+    protected void registerStatesAndModels() {
         EverySlab.FILTERED_BLOCKS.forEach(base -> {
             ResourceLocation baseLocation = BuiltInRegistries.BLOCK.getKey(base);
             ResourceLocation hasFenceGate = EverySlab.FENCE_GATES.hasVariant(baseLocation) ? EverySlab.FENCE_GATES.fromBaseBlock(baseLocation) : null;
@@ -33,13 +26,13 @@ public class ModelGenerator extends ModelProvider {
 
             // Our mixin makes this work for blocks that have unconventionally named textures
             // such as magma_block being named magma.png
-            BlockModelGenerators.BlockFamilyProvider blockFamily = blockModels.familyWithExistingFullBlock(base);
+            ResourceLocation baseTexture = TextureMapping.getBlockTexture(base);
 
-            if (hasFenceGate != null) blockFamily.fenceGate(EverySlab.FENCE_GATES.getBlock(hasFenceGate));
-            if (hasFence != null) blockFamily.fence(EverySlab.FENCES.getBlock(hasFence));
-            if (hasSlab != null) blockFamily.slab(EverySlab.SLABS.getBlock(hasSlab));
-            if (hasStair != null) blockFamily.stairs(EverySlab.STAIRS.getBlock(hasStair));
-            if (hasWall != null) blockFamily.wall(EverySlab.WALLS.getBlock(hasWall));
+            if (hasFenceGate != null) fenceGateBlock(EverySlab.FENCE_GATES.getBlock(hasFenceGate), baseTexture);
+            if (hasFence != null) fenceBlock(EverySlab.FENCES.getBlock(hasFence), baseTexture);
+            if (hasSlab != null) slabBlock(EverySlab.SLABS.getBlock(hasSlab), baseTexture, baseTexture);
+            if (hasStair != null) stairsBlock(EverySlab.STAIRS.getBlock(hasStair), baseTexture);
+            if (hasWall != null) wallBlock(EverySlab.WALLS.getBlock(hasWall), baseTexture);
         });
     }
 }

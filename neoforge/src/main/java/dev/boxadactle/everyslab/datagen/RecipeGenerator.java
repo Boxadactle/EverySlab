@@ -7,19 +7,21 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 
 import java.util.concurrent.CompletableFuture;
 
 public class RecipeGenerator extends RecipeProvider {
-    protected RecipeGenerator(HolderLookup.Provider registries, RecipeOutput output) {
-        super(registries, output);
+    public RecipeGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, lookupProvider);
     }
 
     @Override
-    protected void buildRecipes() {
+    public void buildRecipes(RecipeOutput output) {
         EverySlab.FILTERED_BLOCKS.forEach(base -> {
+            if (BuiltInRegistries.BLOCK.getKey(base).getPath().contains("lamp")) return;
             ResourceLocation baseLocation = BuiltInRegistries.BLOCK.getKey(base);
             ResourceLocation hasFenceGate = EverySlab.FENCE_GATES.hasVariant(baseLocation) ? EverySlab.FENCE_GATES.fromBaseBlock(baseLocation) : null;
             ResourceLocation hasFence = EverySlab.FENCES.hasVariant(baseLocation) ? EverySlab.FENCES.fromBaseBlock(baseLocation) : null;
@@ -28,9 +30,9 @@ public class RecipeGenerator extends RecipeProvider {
             ResourceLocation hasWall = EverySlab.WALLS.hasVariant(baseLocation) ? EverySlab.WALLS.fromBaseBlock(baseLocation) : null;
 
             if (hasFenceGate != null) {
-                stonecutterResultFromBase(RecipeCategory.BUILDING_BLOCKS, EverySlab.FENCE_GATES.getBlock(hasFenceGate), base);
+                stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, EverySlab.FENCE_GATES.getBlock(hasFenceGate), base);
 
-                shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.FENCE_GATES.getBlock(hasFenceGate), 2)
+                ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.FENCE_GATES.getBlock(hasFenceGate), 2)
                         .pattern("/B/")
                         .pattern("/B/")
                         .define('/', Items.STICK)
@@ -40,9 +42,9 @@ public class RecipeGenerator extends RecipeProvider {
             }
 
             if (hasFence != null) {
-                stonecutterResultFromBase(RecipeCategory.BUILDING_BLOCKS, EverySlab.FENCES.getBlock(hasFence), base);
+                stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, EverySlab.FENCES.getBlock(hasFence), base);
 
-                shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.FENCES.getBlock(hasFence), 2)
+                ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.FENCES.getBlock(hasFence), 2)
                         .pattern("B/B")
                         .pattern("B/B")
                         .define('/', Items.STICK)
@@ -52,9 +54,9 @@ public class RecipeGenerator extends RecipeProvider {
             }
 
             if (hasSlab != null) {
-                stonecutterResultFromBase(RecipeCategory.BUILDING_BLOCKS, EverySlab.SLABS.getBlock(hasSlab), base, 2);
+                stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, EverySlab.SLABS.getBlock(hasSlab), base, 2);
 
-                shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.SLABS.getBlock(hasSlab), 6)
+                ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.SLABS.getBlock(hasSlab), 6)
                         .pattern("BBB")
                         .define('B', base)
                         .unlockedBy(getHasName(Items.CRAFTING_TABLE), has(Items.CRAFTING_TABLE))
@@ -62,9 +64,9 @@ public class RecipeGenerator extends RecipeProvider {
             }
 
             if (hasStair != null) {
-                stonecutterResultFromBase(RecipeCategory.BUILDING_BLOCKS, EverySlab.STAIRS.getBlock(hasStair), base);
+                stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, EverySlab.STAIRS.getBlock(hasStair), base);
 
-                shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.STAIRS.getBlock(hasStair), 4)
+                ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.STAIRS.getBlock(hasStair), 4)
                         .pattern("B  ")
                         .pattern("BB ")
                         .pattern("BBB")
@@ -74,9 +76,9 @@ public class RecipeGenerator extends RecipeProvider {
             }
 
             if (hasWall != null) {
-                stonecutterResultFromBase(RecipeCategory.BUILDING_BLOCKS, EverySlab.WALLS.getBlock(hasWall), base);
+                stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, EverySlab.WALLS.getBlock(hasWall), base);
 
-                shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.WALLS.getBlock(hasWall), 6)
+                ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, EverySlab.WALLS.getBlock(hasWall), 6)
                         .pattern("BBB")
                         .pattern("BBB")
                         .define('B', base)
@@ -84,22 +86,5 @@ public class RecipeGenerator extends RecipeProvider {
                         .save(output);
             }
         });
-    }
-
-    public static class Runner extends RecipeProvider.Runner {
-        // Get the parameters from the `GatherDataEvent`s.
-        public Runner(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-            super(output, lookupProvider);
-        }
-
-        @Override
-        protected RecipeProvider createRecipeProvider(HolderLookup.Provider provider, RecipeOutput output) {
-            return new RecipeGenerator(provider, output);
-        }
-
-        @Override
-        public String getName() {
-            return "everyslab_recipes";
-        }
     }
 }

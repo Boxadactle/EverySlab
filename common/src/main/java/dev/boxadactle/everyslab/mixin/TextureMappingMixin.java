@@ -5,8 +5,8 @@ import com.google.gson.JsonParser;
 import dev.boxadactle.everyslab.Constants;
 import dev.boxadactle.everyslab.EverySlab;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,12 +25,12 @@ public class TextureMappingMixin {
     private static ResourceLocation everySlab$applyResourceFixes(ResourceLocation block) {
         // waxed copper has same textures as regular
         if (block.getPath().contains("waxed")) {
-            block = ResourceLocation.fromNamespaceAndPath(block.getNamespace(), block.getPath().replace("waxed_", ""));
+            block = new ResourceLocation(block.getNamespace(), block.getPath().replace("waxed_", ""));
         }
 
         // same for infested
         if (block.getPath().contains("infested")) {
-            block = ResourceLocation.fromNamespaceAndPath(block.getNamespace(), block.getPath().replace("infested_", ""));
+            block = new ResourceLocation(block.getNamespace(), block.getPath().replace("infested_", ""));
         }
 
         return block;
@@ -57,7 +57,7 @@ public class TextureMappingMixin {
             JsonObject json = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
             JsonObject textures = json.getAsJsonObject("textures");
             String allTexture = textures.get("all").getAsString();
-            ResourceLocation mapping = ResourceLocation.parse(allTexture);
+            ResourceLocation mapping = new ResourceLocation(allTexture);
             cir.setReturnValue(mapping);
         }
     }

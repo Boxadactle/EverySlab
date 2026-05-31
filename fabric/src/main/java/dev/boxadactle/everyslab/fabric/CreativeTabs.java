@@ -14,33 +14,33 @@ import net.minecraft.world.item.ItemStack;
 
 public class CreativeTabs {
 
-    public static final ResourceKey<CreativeModeTab> FENCEGATE_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "fencegates"));
+    public static final ResourceKey<CreativeModeTab> FENCEGATE_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), new ResourceLocation(Constants.MOD_ID, "fencegates"));
     public static final CreativeModeTab FENCEGATE_GROUP = FabricItemGroup.builder()
-            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_fence_gate")).get().value()))
+            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(new ResourceLocation(Constants.MOD_ID, "diamond_block_fence_gate"))))
             .title(Component.translatable("itemGroup.everyslab_fencegates"))
             .build();
 
-    public static final ResourceKey<CreativeModeTab> FENCE_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "fences"));
+    public static final ResourceKey<CreativeModeTab> FENCE_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), new ResourceLocation(Constants.MOD_ID, "fences"));
     public static final CreativeModeTab FENCE_GROUP = FabricItemGroup.builder()
-            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_fence")).get().value()))
+            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(new ResourceLocation(Constants.MOD_ID, "diamond_block_fence"))))
             .title(Component.translatable("itemGroup.everyslab_fences"))
             .build();
 
-    public static final ResourceKey<CreativeModeTab> SLAB_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "slabs"));
+    public static final ResourceKey<CreativeModeTab> SLAB_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), new ResourceLocation(Constants.MOD_ID, "slabs"));
     public static final CreativeModeTab SLAB_GROUP = FabricItemGroup.builder()
-            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_slab")).get().value()))
+            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(new ResourceLocation(Constants.MOD_ID, "diamond_block_slab"))))
             .title(Component.translatable("itemGroup.everyslab_slabs"))
             .build();
 
-    public static final ResourceKey<CreativeModeTab> STAIR_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "stairs"));
+    public static final ResourceKey<CreativeModeTab> STAIR_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), new ResourceLocation(Constants.MOD_ID, "stairs"));
     public static final CreativeModeTab STAIR_GROUP = FabricItemGroup.builder()
-            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_stairs")).get().value()))
+            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(new ResourceLocation(Constants.MOD_ID, "diamond_block_stairs"))))
             .title(Component.translatable("itemGroup.everyslab_stairs"))
             .build();
 
-    public static final ResourceKey<CreativeModeTab> WALL_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "walls"));
+    public static final ResourceKey<CreativeModeTab> WALL_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), new ResourceLocation(Constants.MOD_ID, "walls"));
     public static final CreativeModeTab WALL_GROUP = FabricItemGroup.builder()
-            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_wall")).get().value()))
+            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(new ResourceLocation(Constants.MOD_ID, "diamond_block_wall"))))
             .title(Component.translatable("itemGroup.everyslab_walls"))
             .build();
 

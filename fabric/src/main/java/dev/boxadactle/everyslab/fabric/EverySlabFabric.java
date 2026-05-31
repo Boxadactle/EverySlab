@@ -33,17 +33,14 @@ public class EverySlabFabric implements ModInitializer {
         CreativeTabs.addItems();
     }
 
-    private Pair<Block, Item> register(ResourceLocation location, EverySlabBlockProvider blockFactory, Block base) {
-        ResourceKey<Block> blockKey = keyOfBlock(location);
-        // Create the block instance
-        Block block = blockFactory.getVariant(base, blockKey);
+    private <T extends Block> Pair<T, Item> register(ResourceLocation location, EverySlabBlockProvider<T> blockFactory, Block base) {
+        if (BuiltInRegistries.BLOCK.getKey(base).getPath().contains("lamp")) return null;
+        T block = blockFactory.getVariant(base);
 
-        ResourceKey<Item> itemKey = keyOfItem(location);
+        BlockItem blockItem = new BlockItem(block, new Item.Properties());
+        Registry.register(BuiltInRegistries.ITEM, location, blockItem);
 
-        BlockItem blockItem = new BlockItem(block, new Item.Properties().setId(itemKey));
-        Registry.register(BuiltInRegistries.ITEM, itemKey, blockItem);
-
-        return new Pair<>(Registry.register(BuiltInRegistries.BLOCK, blockKey, block), blockItem);
+        return new Pair<>(Registry.register(BuiltInRegistries.BLOCK, location, block), blockItem);
     }
 
     private ResourceKey<Block> keyOfBlock(ResourceLocation name) {

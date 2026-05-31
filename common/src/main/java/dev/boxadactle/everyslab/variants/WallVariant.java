@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class WallVariant extends WallBlock {
-    public WallVariant(Block block, ResourceKey<Block> id) {
-        super(BlockBehaviour.Properties.ofFullCopy(block).setId(id));
+    public WallVariant(Block block) {
+        super(BlockBehaviour.Properties.ofFullCopy(block));
     }
 }

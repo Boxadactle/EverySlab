@@ -1,70 +1,62 @@
 plugins {
-    // see https://fabricmc.net/develop/ for new versions
-    id 'fabric-loom' version '1.10-SNAPSHOT' apply false
-    // see https://projects.neoforged.net/neoforged/moddevgradle for new versions
-    id 'net.neoforged.moddev' version '2.0.62-beta' apply false
+    // Required for NeoGradle
+    id "org.jetbrains.gradle.plugin.idea-ext" version "1.1.7"
     id "me.modmuss50.mod-publish-plugin" version "0.8.4"
     id "com.github.breadmoirai.github-release" version "2.5.2"
 }
 
-allprojects {
-    repositories {
-        mavenCentral()
-    }
-}
-
-publishMods {
-    changelog = new File(rootProject.rootDir, project.changelog_file).text
-    type = STABLE
-
-    def cfOptions = curseforgeOptions {
-        accessToken = System.getenv("CURSEFORGE_TOKEN")
-        projectId = project.project_id_curseforge
-        minecraftVersions.addAll(project.game_versions.split(","))
-        changelogType = "markdown"
-        javaVersions.add(JavaVersion.current())
-    }
-
-    def mrOptions = modrinthOptions {
-        accessToken = System.getenv("MODRINTH_TOKEN")
-        projectId = project.project_id_modrinth
-        minecraftVersions.addAll(project.game_versions.split(","))
-    }
-
-    curseforge("curseforgeFabric") {
-        from cfOptions
-        file project(":fabric")
-        modLoaders.addAll("fabric", "quilt")
-        requires {
-            slug = "fabric-api"
-        }
-        displayName = "[Fabric ${project.minecraft_version}] v${project.version}"
-    }
-
-    curseforge("curseforgeNeoforge") {
-        from cfOptions
-        file project(":neoforge")
-        modLoaders.add("neoforge")
-        displayName = "[Neoforge ${project.minecraft_version}] v${project.version}"
-    }
-
-    modrinth("modrinthFabric") {
-        from mrOptions
-        file project(":fabric")
-        modLoaders.addAll("fabric", "quilt")
-        requires {
-            slug = "fabric-api"
-        }
-        displayName = "[Fabric ${project.minecraft_version}] v${project.version}"
-    }
-
-    modrinth("modrinthNeoforge") {
-        from mrOptions
-        file project(":neoforge")
-        modLoaders.add("neoforge")
-        displayName = "[Neoforge ${project.minecraft_version}] v${project.version}"
-    }
-}
+//publishMods {
+//    changelog = new File(rootProject.rootDir, changelog_file).text
+//    type = STABLE
+//
+//    def cfOptions = curseforgeOptions {
+//        accessToken = System.getenv("CURSEFORGE_TOKEN")
+//        projectId = project_id_curseforge
+//        minecraftVersions.addAll(game_versions.split(","))
+//        changelogType = "markdown"
+//        javaVersions.add(JavaVersion.current())
+//    }
+//
+//    def mrOptions = modrinthOptions {
+//        accessToken = System.getenv("MODRINTH_TOKEN")
+//        projectId = project_id_modrinth
+//        minecraftVersions.addAll(project.game_versions.split(","))
+//    }
+//
+//    curseforge("curseforgeFabric") {
+//        from cfOptions
+//        file project(":fabric")
+//        modLoaders.addAll("fabric", "quilt")
+//        requires {
+//            slug = "fabric-api"
+//        }
+//        displayName = "[Fabric ${project.minecraft_version}] v${project.version}"
+//    }
+//
+//    curseforge("curseforgeNeoforge") {
+//        from cfOptions
+//        file project(":neoforge")
+//        modLoaders.add("neoforge")
+//        displayName = "[Neoforge ${project.minecraft_version}] v${project.version}"
+//    }
+//
+//    modrinth("modrinthFabric") {
+//        from mrOptions
+//        file project(":fabric")
+//        modLoaders.addAll("fabric", "quilt")
+//        requires {
+//            slug = "fabric-api"
+//        }
+//        displayName = "[Fabric ${project.minecraft_version}] v${project.version}"
+//    }
+//
+//    modrinth("modrinthNeoforge") {
+//        from mrOptions
+//        file project(":neoforge")
+//        modLoaders.add("neoforge")
+//        displayName = "[Neoforge ${project.minecraft_version}] v${project.version}"
+//    }
+//}
 
 githubRelease {
     owner = "Boxadactle"
