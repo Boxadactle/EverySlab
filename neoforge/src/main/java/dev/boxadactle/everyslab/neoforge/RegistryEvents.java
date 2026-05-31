@@ -5,7 +5,7 @@ import dev.boxadactle.everyslab.EverySlab;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
@@ -35,47 +35,47 @@ public class RegistryEvents {
         });
 
         event.register(Registries.CREATIVE_MODE_TAB, registry -> {
-            registry.register(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "fencegates"), CreativeModeTab.builder()
+            registry.register(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "fencegates"), CreativeModeTab.builder()
                     .displayItems((params, output) -> {
                         EverySlab.FENCE_GATES.forEachBlock(output::accept);
                     })
-                    .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_fence_gate")).get().value()))
+                    .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_fence_gate")).get().value()))
                     .title(Component.translatable("itemGroup.everyslab_fencegates"))
                     .build()
             );
 
-            registry.register(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "fences"), CreativeModeTab.builder()
+            registry.register(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "fences"), CreativeModeTab.builder()
                     .displayItems((params, output) -> {
                         EverySlab.FENCES.forEachBlock(output::accept);
                     })
-                    .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_fence")).get().value()))
+                    .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_fence")).get().value()))
                     .title(Component.translatable("itemGroup.everyslab_fences"))
                     .build()
             );
 
-            registry.register(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "slabs"), CreativeModeTab.builder()
+            registry.register(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "slabs"), CreativeModeTab.builder()
                     .displayItems((params, output) -> {
                         EverySlab.SLABS.forEachBlock(output::accept);
                     })
-                    .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_slab")).get().value()))
+                    .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_slab")).get().value()))
                     .title(Component.translatable("itemGroup.everyslab_slabs"))
                     .build()
             );
 
-            registry.register(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "stairs"), CreativeModeTab.builder()
+            registry.register(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "stairs"), CreativeModeTab.builder()
                     .displayItems((params, output) -> {
                         EverySlab.STAIRS.forEachBlock(output::accept);
                     })
-                    .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_stairs")).get().value()))
+                    .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_stairs")).get().value()))
                     .title(Component.translatable("itemGroup.everyslab_stairs"))
                     .build()
             );
 
-            registry.register(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "walls"), CreativeModeTab.builder()
+            registry.register(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "walls"), CreativeModeTab.builder()
                     .displayItems((params, output) -> {
                         EverySlab.WALLS.forEachBlock(output::accept);
                     })
-                    .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_wall")).get().value()))
+                    .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_wall")).get().value()))
                     .title(Component.translatable("itemGroup.everyslab_walls"))
                     .build()
             );

@@ -6,8 +6,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -33,7 +33,7 @@ public class EverySlabFabric implements ModInitializer {
         CreativeTabs.addItems();
     }
 
-    private Pair<Block, Item> register(ResourceLocation location, EverySlabBlockProvider blockFactory, Block base) {
+    private Pair<Block, Item> register(Identifier location, EverySlabBlockProvider blockFactory, Block base) {
         ResourceKey<Block> blockKey = keyOfBlock(location);
         // Create the block instance
         Block block = blockFactory.getVariant(base, blockKey);
@@ -46,11 +46,11 @@ public class EverySlabFabric implements ModInitializer {
         return new Pair<>(Registry.register(BuiltInRegistries.BLOCK, blockKey, block), blockItem);
     }
 
-    private ResourceKey<Block> keyOfBlock(ResourceLocation name) {
+    private ResourceKey<Block> keyOfBlock(Identifier name) {
         return ResourceKey.create(Registries.BLOCK, name);
     }
 
-    private ResourceKey<Item> keyOfItem(ResourceLocation name) {
+    private ResourceKey<Item> keyOfItem(Identifier name) {
         return ResourceKey.create(Registries.ITEM, name);
     }
 

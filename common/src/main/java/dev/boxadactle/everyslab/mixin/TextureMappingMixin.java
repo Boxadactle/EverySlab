@@ -7,7 +7,7 @@ import dev.boxadactle.everyslab.EverySlab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -22,28 +22,28 @@ import java.io.InputStreamReader;
 public class TextureMappingMixin {
 
     @Unique
-    private static ResourceLocation everySlab$applyResourceFixes(ResourceLocation block) {
+    private static Identifier everySlab$applyResourceFixes(Identifier block) {
         // waxed copper has same textures as regular
         if (block.getPath().contains("waxed")) {
-            block = ResourceLocation.fromNamespaceAndPath(block.getNamespace(), block.getPath().replace("waxed_", ""));
+            block = Identifier.fromNamespaceAndPath(block.getNamespace(), block.getPath().replace("waxed_", ""));
         }
 
         // same for infested
         if (block.getPath().contains("infested")) {
-            block = ResourceLocation.fromNamespaceAndPath(block.getNamespace(), block.getPath().replace("infested_", ""));
+            block = Identifier.fromNamespaceAndPath(block.getNamespace(), block.getPath().replace("infested_", ""));
         }
 
         return block;
     }
 
     @Inject(
-            method = "getBlockTexture(Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/resources/ResourceLocation;",
+            method = "getBlockTexture(Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/resources/Identifier;",
             at = @At("HEAD"),
             cancellable = true
     )
-    private static void getPathIfExists(Block b, CallbackInfoReturnable<ResourceLocation> cir) {
+    private static void getPathIfExists(Block b, CallbackInfoReturnable<Identifier> cir) {
         if (Constants.IS_DEV) {
-            ResourceLocation block = everySlab$applyResourceFixes(BuiltInRegistries.BLOCK.getKey(b));
+            Identifier block = everySlab$applyResourceFixes(BuiltInRegistries.BLOCK.getKey(b));
 
             if (!EverySlab.FILTERED_BLOCKS.contains(b)) return;
 
@@ -57,7 +57,7 @@ public class TextureMappingMixin {
             JsonObject json = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
             JsonObject textures = json.getAsJsonObject("textures");
             String allTexture = textures.get("all").getAsString();
-            ResourceLocation mapping = ResourceLocation.parse(allTexture);
+            Identifier mapping = Identifier.parse(allTexture);
             cir.setReturnValue(mapping);
         }
     }

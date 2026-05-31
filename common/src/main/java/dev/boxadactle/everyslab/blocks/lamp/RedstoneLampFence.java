@@ -26,7 +26,7 @@ public class RedstoneLampFence extends FenceVariant {
     }
 
     protected void neighborChanged(BlockState p_55666_, Level p_55667_, BlockPos p_55668_, Block p_55669_,  Orientation p_364297_, boolean p_55671_) {
-        if (!p_55667_.isClientSide) {
+        if (!p_55667_.isClientSide()) {
             boolean flag = p_55666_.getValue(LIT);
             if (flag != p_55667_.hasNeighborSignal(p_55668_)) {
                 if (flag) {

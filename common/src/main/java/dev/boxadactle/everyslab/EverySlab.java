@@ -6,8 +6,8 @@ import com.google.gson.JsonParser;
 import dev.boxadactle.everyslab.registry.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
@@ -39,7 +39,7 @@ public class EverySlab {
     public static void init() {
         List<Block> generated = getGeneratedBlocksIfExists();
         if (generated == null) BuiltInRegistries.BLOCK.forEach(block -> {
-            ResourceLocation blo = BuiltInRegistries.BLOCK.getKey(block);
+            Identifier blo = BuiltInRegistries.BLOCK.getKey(block);
 
             // maybe this will be a feature one day
             if (!blo.getNamespace().equals("minecraft")) return;
@@ -71,7 +71,7 @@ public class EverySlab {
             JsonArray generated = json.getAsJsonArray("generated");
 
             List<Block> blocks = new ArrayList<>();
-            generated.asList().forEach(id -> blocks.add(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(id.getAsString()))));
+            generated.asList().forEach(id -> blocks.add(BuiltInRegistries.BLOCK.getValue(Identifier.parse(id.getAsString()))));
 
             return blocks;
         } catch (Exception e) {
@@ -93,11 +93,11 @@ public class EverySlab {
 
     public abstract static class VariantRegistry {
 
-        protected final HashMap<ResourceLocation, Pair<EverySlabBlockProvider, Block>> VARIANTS = new HashMap<>();
+        protected final HashMap<Identifier, Pair<EverySlabBlockProvider, Block>> VARIANTS = new HashMap<>();
 
-        protected HashMap<ResourceLocation, ResourceLocation> VARIANT_BASE = new HashMap<>();
-        protected HashMap<ResourceLocation, Block> VARIANT_REGISTRY = new HashMap<>();
-        protected HashMap<ResourceLocation, Item> VARIANT_ITEM_REGISTRY = new HashMap<>();
+        protected HashMap<Identifier, Identifier> VARIANT_BASE = new HashMap<>();
+        protected HashMap<Identifier, Block> VARIANT_REGISTRY = new HashMap<>();
+        protected HashMap<Identifier, Item> VARIANT_ITEM_REGISTRY = new HashMap<>();
 
         protected abstract EverySlabBlockProvider getProvider();
 
@@ -112,18 +112,18 @@ public class EverySlab {
         }
 
         public void createVariant(Block block) {
-            ResourceLocation location = BuiltInRegistries.BLOCK.getKey(block);
+            Identifier location = BuiltInRegistries.BLOCK.getKey(block);
             String str = location.toString();
             if (alreadyExists(block)) return;
             if (
-                    BuiltInRegistries.BLOCK.get(ResourceLocation.parse(str + append())).isEmpty() &&
-                    BuiltInRegistries.BLOCK.get(ResourceLocation.parse(str.substring(0, str.length() - 1) + append())).isEmpty()
+                    BuiltInRegistries.BLOCK.get(Identifier.parse(str + append())).isEmpty() &&
+                    BuiltInRegistries.BLOCK.get(Identifier.parse(str.substring(0, str.length() - 1) + append())).isEmpty()
             ) createVariant(block, getProvider());
         }
 
         public void createVariant(Block block, EverySlabBlockProvider provider) {
-            ResourceLocation location = BuiltInRegistries.BLOCK.getKey(block);
-            ResourceLocation location1 = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, location.getPath() + append());
+            Identifier location = BuiltInRegistries.BLOCK.getKey(block);
+            Identifier location1 = Identifier.fromNamespaceAndPath(Constants.MOD_ID, location.getPath() + append());
             VARIANTS.put(location1, new Pair<>(provider, block));
             VARIANT_BASE.put(location1, location);
         }
@@ -155,11 +155,11 @@ public class EverySlab {
             });
         }
 
-        public Block getBlock(ResourceLocation location) {
+        public Block getBlock(Identifier location) {
             return VARIANT_REGISTRY.get(location);
         }
 
-        public Item getBlockItem(ResourceLocation location) {
+        public Item getBlockItem(Identifier location) {
             return VARIANT_ITEM_REGISTRY.get(location);
         }
 
@@ -167,16 +167,16 @@ public class EverySlab {
             VARIANT_REGISTRY.forEach((resourceLocation, block) -> blockConsumer.accept(block));
         }
 
-        public void forEachId(Consumer<ResourceLocation> idConsumer) {
+        public void forEachId(Consumer<Identifier> idConsumer) {
             VARIANT_REGISTRY.forEach((resourceLocation, block) -> idConsumer.accept(resourceLocation));
         }
 
-        public Block getBaseBlock(ResourceLocation location) {
+        public Block getBaseBlock(Identifier location) {
             return BuiltInRegistries.BLOCK.get(VARIANT_BASE.get(location)).get().value();
         }
 
-        public ResourceLocation fromBaseBlock(ResourceLocation location) {
-            for (ResourceLocation key : VARIANT_BASE.keySet()) {
+        public Identifier fromBaseBlock(Identifier location) {
+            for (Identifier key : VARIANT_BASE.keySet()) {
                 if (VARIANT_BASE.get(key).equals(location)) {
                     return key;
                 }
@@ -184,11 +184,11 @@ public class EverySlab {
             return null;
         }
 
-        public Block blockFromBaseBlock(ResourceLocation location) {
+        public Block blockFromBaseBlock(Identifier location) {
             return getBlock(fromBaseBlock(location));
         }
 
-        public boolean hasVariant(ResourceLocation base) {
+        public boolean hasVariant(Identifier base) {
             return VARIANT_BASE.containsValue(base);
         }
 
@@ -200,8 +200,8 @@ public class EverySlab {
             return VARIANT_ITEM_REGISTRY.values();
         }
 
-        protected ResourceLocation id(String path) {
-            return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, path);
+        protected Identifier id(String path) {
+            return Identifier.fromNamespaceAndPath(Constants.MOD_ID, path);
         }
     }
 }

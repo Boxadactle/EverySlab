@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.boxadactle.everyslab.mixin.BlockStateInvoker;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -36,7 +36,7 @@ public class EverySlabClient {
     }
 
     private static boolean hasMultipleTextures(Block block) {
-        ResourceLocation location = ModelLocationUtils.getModelLocation(block);
+        Identifier location = ModelLocationUtils.getModelLocation(block);
         String path = "assets/" + location.getNamespace() + "/models/" + location.getPath() + ".json";
         try (InputStream is = EverySlab.class.getClassLoader().getResourceAsStream(path)) {
             if (is == null) return false;

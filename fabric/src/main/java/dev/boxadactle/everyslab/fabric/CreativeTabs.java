@@ -7,40 +7,40 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
 public class CreativeTabs {
 
-    public static final ResourceKey<CreativeModeTab> FENCEGATE_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "fencegates"));
+    public static final ResourceKey<CreativeModeTab> FENCEGATE_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), Identifier.fromNamespaceAndPath(Constants.MOD_ID, "fencegates"));
     public static final CreativeModeTab FENCEGATE_GROUP = FabricItemGroup.builder()
-            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_fence_gate")).get().value()))
+            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_fence_gate")).get().value()))
             .title(Component.translatable("itemGroup.everyslab_fencegates"))
             .build();
 
-    public static final ResourceKey<CreativeModeTab> FENCE_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "fences"));
+    public static final ResourceKey<CreativeModeTab> FENCE_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), Identifier.fromNamespaceAndPath(Constants.MOD_ID, "fences"));
     public static final CreativeModeTab FENCE_GROUP = FabricItemGroup.builder()
-            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_fence")).get().value()))
+            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_fence")).get().value()))
             .title(Component.translatable("itemGroup.everyslab_fences"))
             .build();
 
-    public static final ResourceKey<CreativeModeTab> SLAB_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "slabs"));
+    public static final ResourceKey<CreativeModeTab> SLAB_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), Identifier.fromNamespaceAndPath(Constants.MOD_ID, "slabs"));
     public static final CreativeModeTab SLAB_GROUP = FabricItemGroup.builder()
-            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_slab")).get().value()))
+            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_slab")).get().value()))
             .title(Component.translatable("itemGroup.everyslab_slabs"))
             .build();
 
-    public static final ResourceKey<CreativeModeTab> STAIR_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "stairs"));
+    public static final ResourceKey<CreativeModeTab> STAIR_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), Identifier.fromNamespaceAndPath(Constants.MOD_ID, "stairs"));
     public static final CreativeModeTab STAIR_GROUP = FabricItemGroup.builder()
-            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_stairs")).get().value()))
+            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_stairs")).get().value()))
             .title(Component.translatable("itemGroup.everyslab_stairs"))
             .build();
 
-    public static final ResourceKey<CreativeModeTab> WALL_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "walls"));
+    public static final ResourceKey<CreativeModeTab> WALL_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), Identifier.fromNamespaceAndPath(Constants.MOD_ID, "walls"));
     public static final CreativeModeTab WALL_GROUP = FabricItemGroup.builder()
-            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_wall")).get().value()))
+            .icon(() -> new ItemStack(BuiltInRegistries.BLOCK.get(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "diamond_block_wall")).get().value()))
             .title(Component.translatable("itemGroup.everyslab_walls"))
             .build();
 

@@ -18,7 +18,7 @@ import java.util.Set;
 public class EverySlabNeoforge {
 
     public EverySlabNeoforge(IEventBus eventBus) {
-        Constants.IS_DEV = !FMLEnvironment.production;
+        Constants.IS_DEV = !FMLEnvironment.isProduction();
         Constants.CONFIG_PATH = FMLPaths.CONFIGDIR.get();
 
         if (Constants.IS_DEV) eventBus.addListener(EverySlabNeoforge::gatherData);

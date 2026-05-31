@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -46,7 +46,7 @@ public class BlockTagsGenerator extends BlockTagsProvider {
         loadTag("needs_stone_tool");
 
         EverySlab.FILTERED_BLOCKS.forEach(base -> {
-            ResourceLocation baseLocation = BuiltInRegistries.BLOCK.getKey(base);
+            Identifier baseLocation = BuiltInRegistries.BLOCK.getKey(base);
             Block hasFenceGate = EverySlab.FENCE_GATES.hasVariant(baseLocation) ? EverySlab.FENCE_GATES.blockFromBaseBlock(baseLocation) : null;
             Block hasFence = EverySlab.FENCES.hasVariant(baseLocation) ? EverySlab.FENCES.blockFromBaseBlock(baseLocation) : null;
             Block hasSlab = EverySlab.SLABS.hasVariant(baseLocation) ? EverySlab.SLABS.blockFromBaseBlock(baseLocation) : null;
