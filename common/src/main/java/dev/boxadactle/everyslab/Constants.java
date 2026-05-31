@@ -12,5 +12,5 @@ public class Constants {
 	public static final Logger LOG = LoggerFactory.getLogger(MOD_NAME);
 	public static boolean IS_DEV;
 	public static Path CONFIG_PATH;
-	public static String MC_VERSION = "1.21.5";
+	public static String MC_VERSION = "1.21.8";
 }

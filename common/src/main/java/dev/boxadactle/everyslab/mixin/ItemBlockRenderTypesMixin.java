@@ -4,6 +4,7 @@ import dev.boxadactle.everyslab.EverySlab;
 import dev.boxadactle.everyslab.registry.*;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -22,12 +23,12 @@ public class ItemBlockRenderTypesMixin {
 
     @Shadow
     @Final
-    private static Map<Block, RenderType> TYPE_BY_BLOCK;
+    private static Map<Block, ChunkSectionLayer> TYPE_BY_BLOCK;
 
     @Inject(method = "<clinit>*", at = @At("RETURN"))
     private static void onInitialize(CallbackInfo info) {
         // make the variants copy the rendering of the source block
-        HashMap<Block, RenderType> customRenderTypes = new HashMap<>();
+        HashMap<Block, ChunkSectionLayer> customRenderTypes = new HashMap<>();
         TYPE_BY_BLOCK.forEach((base, renderType) -> {
             ResourceLocation baseLocation = BuiltInRegistries.BLOCK.getKey(base);
             Block hasFenceGate = EverySlab.FENCE_GATES.hasVariant(baseLocation) ? EverySlab.FENCE_GATES.blockFromBaseBlock(baseLocation) : null;
