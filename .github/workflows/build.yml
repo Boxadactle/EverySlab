@@ -27,9 +27,6 @@ jobs:
       - name: Set up gradlew
         run: chmod +x ./gradlew
 
-      - name: Generate Data with Gradle
-        run: ./gradlew build runData runDatagen
-
       - name: Build with Gradle
         run: ./gradlew build
 

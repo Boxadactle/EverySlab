@@ -118,6 +118,10 @@ processResources {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
+tasks.named("sourcesJar", Jar) {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
 publishing {
     publications {
         register('mavenJava', MavenPublication) {

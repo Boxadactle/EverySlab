@@ -41,3 +41,11 @@ fabricApi {
         client = true
     }
 }
+
+tasks.named("build") {
+    dependsOn(tasks.named("runDatagen"))
+}
+
+tasks.named("sourcesJar") {
+    dependsOn(tasks.named("runDatagen"))
+}
