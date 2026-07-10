@@ -24,4 +24,5 @@ run
 runs
 
 # generated files
-*/generated/*
+/fabric/src/main/generated/
+/neoforge/src/generated
