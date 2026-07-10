@@ -38,8 +38,7 @@ processResources {
 }
 
 tasks.named('javadoc', Javadoc).configure {
-    dependsOn(configurations.commonJava)
-    source(configurations.commonJava)
+    enabled = false
 }
 
 tasks.named('sourcesJar', Jar) {
