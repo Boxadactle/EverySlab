@@ -62,11 +62,3 @@ sourceSets.configureEach {
         }
     }
 }
-
-tasks.named("build") {
-    dependsOn(tasks.named("runData"))
-}
-
-tasks.named("sourcesJar") {
-    dependsOn(tasks.named("runData"))
-}
