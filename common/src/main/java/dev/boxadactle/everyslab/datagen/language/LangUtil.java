@@ -1,4 +1,4 @@
-package dev.boxadactle.everyslab.datagen.localization;
+package dev.boxadactle.everyslab.datagen.language;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

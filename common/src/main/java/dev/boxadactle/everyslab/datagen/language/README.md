@@ -13,7 +13,7 @@ EverySlab supports community translations! Since translations are generated via 
 
 ### Step 1: Create a Language Provider
 
-Navigate to `common/src/main/java/dev/boxadactle/everyslab/datagen/localization` and create a new file for your locale. Name it using your locale code — for example, `EsEsProvider.java` for Spanish (Spain).
+Navigate to `common/src/main/java/dev/boxadactle/everyslab/datagen/language` and create a new file for your locale. Name it using your locale code — for example, `EsEsProvider.java` for Spanish (Spain).
 
 You can use the following example code as a template, replacing `es_es` with your locale code and updating the translations accordingly:
 
@@ -23,6 +23,7 @@ Make sure to remember the name of your class, as you will need it later. It must
 package dev.boxadactle.everyslab.datagen.localization;
 
 import dev.boxadactle.everyslab.EverySlab;
+import dev.boxadactle.everyslab.datagen.language.LangUtil;
 import dev.boxadactle.everyslab.datagen.util.LanguageHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -51,17 +52,22 @@ public class EsEsProvider implements LanguageHelper.Provider {
         EverySlab.FILTERED_BLOCKS.forEach(base -> {
             Identifier baseLocation = BuiltInRegistries.BLOCK.getKey(base);
             Identifier hasFenceGate = EverySlab.FENCE_GATES.hasVariant(baseLocation) ? EverySlab.FENCE_GATES.fromBaseBlock(baseLocation) : null;
-            Identifier hasFence    = EverySlab.FENCES.hasVariant(baseLocation)      ? EverySlab.FENCES.fromBaseBlock(baseLocation)      : null;
-            Identifier hasSlab     = EverySlab.SLABS.hasVariant(baseLocation)       ? EverySlab.SLABS.fromBaseBlock(baseLocation)        : null;
-            Identifier hasStair    = EverySlab.STAIRS.hasVariant(baseLocation)      ? EverySlab.STAIRS.fromBaseBlock(baseLocation)       : null;
-            Identifier hasWall     = EverySlab.WALLS.hasVariant(baseLocation)       ? EverySlab.WALLS.fromBaseBlock(baseLocation)        : null;
+            Identifier hasFence = EverySlab.FENCES.hasVariant(baseLocation) ? EverySlab.FENCES.fromBaseBlock(baseLocation) : null;
+            Identifier hasSlab = EverySlab.SLABS.hasVariant(baseLocation) ? EverySlab.SLABS.fromBaseBlock(baseLocation) : null;
+            Identifier hasStair = EverySlab.STAIRS.hasVariant(baseLocation) ? EverySlab.STAIRS.fromBaseBlock(baseLocation) : null;
+            Identifier hasWall = EverySlab.WALLS.hasVariant(baseLocation) ? EverySlab.WALLS.fromBaseBlock(baseLocation) : null;
 
             // Adjust the suffix strings to match your language's grammar
-            if (hasFenceGate != null) provider.add(EverySlab.FENCE_GATES.getBlockItem(hasFenceGate), String.format("Puerta de valla de %s", base.getName().getString()));
-            if (hasFence     != null) provider.add(EverySlab.FENCES.getBlockItem(hasFence),           String.format("Valla de  %s",     base.getName().getString()));
-            if (hasSlab      != null) provider.add(EverySlab.SLABS.getBlockItem(hasSlab),             String.format("Losa de %s",      base.getName().getString()));
-            if (hasStair     != null) provider.add(EverySlab.STAIRS.getBlockItem(hasStair),           String.format("Escaleras de %s",    base.getName().getString()));
-            if (hasWall      != null) provider.add(EverySlab.WALLS.getBlockItem(hasWall),             String.format("Muro de %s",      base.getName().getString()));
+            if (hasFenceGate != null)
+                provider.add(EverySlab.FENCE_GATES.getBlockItem(hasFenceGate), String.format("Puerta de valla de %s", base.getName().getString()));
+            if (hasFence != null)
+                provider.add(EverySlab.FENCES.getBlockItem(hasFence), String.format("Valla de  %s", base.getName().getString()));
+            if (hasSlab != null)
+                provider.add(EverySlab.SLABS.getBlockItem(hasSlab), String.format("Losa de %s", base.getName().getString()));
+            if (hasStair != null)
+                provider.add(EverySlab.STAIRS.getBlockItem(hasStair), String.format("Escaleras de %s", base.getName().getString()));
+            if (hasWall != null)
+                provider.add(EverySlab.WALLS.getBlockItem(hasWall), String.format("Muro de %s", base.getName().getString()));
         });
 
         // make sure to restore the original language for other language localizations

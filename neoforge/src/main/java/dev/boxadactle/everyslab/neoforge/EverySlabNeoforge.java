@@ -3,7 +3,7 @@ package dev.boxadactle.everyslab.neoforge;
 import dev.boxadactle.everyslab.Constants;
 import dev.boxadactle.everyslab.datagen.BlockListGenerator;
 import dev.boxadactle.everyslab.datagen.RecipeGenerator;
-import dev.boxadactle.everyslab.datagen.localization.*;
+import dev.boxadactle.everyslab.datagen.language.EsEsProvider;
 import dev.boxadactle.everyslab.neoforge.datagen.NeoBlockTagsGenerator;
 import dev.boxadactle.everyslab.neoforge.datagen.NeoLangProvider;
 import dev.boxadactle.everyslab.neoforge.datagen.NeoLootGenerator;
@@ -40,7 +40,7 @@ public class EverySlabNeoforge {
         event.createProvider(BlockListGenerator::new);
 
         // Add language providers below ↓
-        event.createProvider((output) -> new NeoLangProvider(output, EnUsProvider::new, "en_us"));
+        event.createProvider((output) -> new NeoLangProvider(output, dev.boxadactle.everyslab.datagen.language.EnUsProvider::new, "en_us"));
         event.createProvider((output) -> new NeoLangProvider(output, EsEsProvider::new, "es_es"));
     }
 }

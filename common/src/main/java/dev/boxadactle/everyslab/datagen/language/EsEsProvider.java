@@ -1,4 +1,4 @@
-package dev.boxadactle.everyslab.datagen.localization;
+package dev.boxadactle.everyslab.datagen.language;
 
 import dev.boxadactle.everyslab.EverySlab;
 import dev.boxadactle.everyslab.datagen.util.LanguageHelper;
