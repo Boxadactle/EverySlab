@@ -115,11 +115,7 @@ processResources {
 
     inputs.properties(expandProps)
 
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-tasks.withType(AbstractCopyTask).configureEach {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 publishing {

@@ -88,7 +88,7 @@ Contributions are welcome! Please open an issue before submitting a pull request
 
 As EverySlab's assets are generated when built, mod translation is not as straightfoward as other mods.
 
-If you would like to translate this mod, please follow [this guide](https://github.com/Boxadactle/EverySlab/tree/master/neoforge/src/main/java/dev/boxadactle/everyslab/datagen/localization/).
+If you would like to translate this mod, please follow [this guide](https://github.com/Boxadactle/EverySlab/tree/master/common/src/main/java/dev/boxadactle/everyslab/datagen/localization/).
 
 ---
 

@@ -1,8 +1,13 @@
 package dev.boxadactle.everyslab.neoforge;
 
 import dev.boxadactle.everyslab.Constants;
-import dev.boxadactle.everyslab.datagen.*;
+import dev.boxadactle.everyslab.datagen.BlockListGenerator;
+import dev.boxadactle.everyslab.datagen.RecipeGenerator;
 import dev.boxadactle.everyslab.datagen.localization.*;
+import dev.boxadactle.everyslab.neoforge.datagen.NeoBlockTagsGenerator;
+import dev.boxadactle.everyslab.neoforge.datagen.NeoLangProvider;
+import dev.boxadactle.everyslab.neoforge.datagen.NeoLootGenerator;
+import dev.boxadactle.everyslab.neoforge.datagen.NeoModelGenerator;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.IEventBus;
@@ -25,17 +30,17 @@ public class EverySlabNeoforge {
     }
 
     public static void gatherData(GatherDataEvent.Client event) {
-        event.createProvider(ModelGenerator::new);
-        event.createProvider(BlockTagsGenerator::new);
+        event.createProvider(NeoModelGenerator::new);
+        event.createProvider(NeoBlockTagsGenerator::new);
         event.createProvider((output, lookupProvider) -> new LootTableProvider(output, Set.of(), List.of(new LootTableProvider.SubProviderEntry(
-                LootTableGenerator::new,
+                NeoLootGenerator::new,
                 LootContextParamSets.BLOCK
         )), lookupProvider));
         event.createProvider(RecipeGenerator.Runner::new);
         event.createProvider(BlockListGenerator::new);
 
-        // language providers
-        event.createProvider(EnUsProvider::new);
-        event.createProvider(EsEsProvider::new);
+        // Add language providers below ↓
+        event.createProvider((output) -> new NeoLangProvider(output, EnUsProvider::new, "en_us"));
+        event.createProvider((output) -> new NeoLangProvider(output, EsEsProvider::new, "es_es"));
     }
 }

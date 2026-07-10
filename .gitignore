@@ -24,4 +24,4 @@ run
 runs
 
 # generated files
-*/src/generated/*
+*/generated/*

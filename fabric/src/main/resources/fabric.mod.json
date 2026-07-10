@@ -17,6 +17,9 @@
     "entrypoints": {
         "main": [
           "dev.boxadactle.everyslab.fabric.EverySlabFabric"
+        ],
+        "fabric-datagen": [
+            "dev.boxadactle.everyslab.fabric.EverySlabDatagenFabric"
         ]
     },
     "mixins": [

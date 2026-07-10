@@ -16,6 +16,10 @@ dependencies {
         capabilities {
             requireCapability "$group:$mod_id"
         }
+        def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+        attributes {
+            attribute(loaderAttribute, 'common')
+        }
     }
     commonJava project(path: ':common', configuration: 'commonJava')
     commonResources project(path: ':common', configuration: 'commonResources')
@@ -29,6 +33,8 @@ tasks.named('compileJava', JavaCompile) {
 processResources {
     dependsOn(configurations.commonResources)
     from(configurations.commonResources)
+
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 tasks.named('javadoc', Javadoc).configure {
@@ -41,16 +47,4 @@ tasks.named('sourcesJar', Jar) {
     from(configurations.commonJava)
     dependsOn(configurations.commonResources)
     from(configurations.commonResources)
-}
-
-sourceSets {
-    main {
-        resources {
-            srcDirs = [
-                    '/src/main/resources',
-                    project(":common").file('/src/main/resources'),
-                    project(":common").file('/src/generated/resources')
-            ]
-        }
-    }
 }

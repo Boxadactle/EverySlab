@@ -1,28 +1,29 @@
 package dev.boxadactle.everyslab.datagen.localization;
 
 import dev.boxadactle.everyslab.EverySlab;
+import dev.boxadactle.everyslab.datagen.util.LanguageHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.common.data.LanguageProvider;
 
-public class EsEsProvider extends LanguageProvider {
-    public EsEsProvider(PackOutput output) {
-        super(output, EverySlab.MOD_ID, "es_es"); // <-- your locale code here
+public class EsEsProvider implements LanguageHelper.Provider {
+
+    LanguageHelper provider;
+
+    public EsEsProvider(LanguageHelper p) {
+        provider = p;
     }
 
-    @Override
-    protected void addTranslations() {
+    public void addTranslations() {
         // load the correct language, so the block names translate correctly
         //                your locale code       reads right to left? (Arabic/Hebrew etc.)
         LangUtil.injectLanguage("es_es", false);
 
         // Creative tab names
-        add("itemGroup.everyslab_fencegates", "Variantes de puerta de valla");
-        add("itemGroup.everyslab_fences", "Variantes de valla");
-        add("itemGroup.everyslab_slabs", "Variantes de losa");
-        add("itemGroup.everyslab_stairs", "Variantes de escaleras");
-        add("itemGroup.everyslab_walls", "Variantes de muro");
+        provider.add("itemGroup.everyslab_fencegates", "Variantes de puerta de valla");
+        provider.add("itemGroup.everyslab_fences", "Variantes de valla");
+        provider.add("itemGroup.everyslab_slabs", "Variantes de losa");
+        provider.add("itemGroup.everyslab_stairs", "Variantes de escaleras");
+        provider.add("itemGroup.everyslab_walls", "Variantes de muro");
 
         // Block name suffixes — these are appended to the base block's translated name
         EverySlab.FILTERED_BLOCKS.forEach(base -> {
@@ -34,11 +35,11 @@ public class EsEsProvider extends LanguageProvider {
             Identifier hasWall     = EverySlab.WALLS.hasVariant(baseLocation)       ? EverySlab.WALLS.fromBaseBlock(baseLocation)        : null;
 
             // Adjust the suffix strings to match your language's grammar
-            if (hasFenceGate != null) add(EverySlab.FENCE_GATES.getBlockItem(hasFenceGate), String.format("Puerta de valla de %s", base.getName().getString()));
-            if (hasFence     != null) add(EverySlab.FENCES.getBlockItem(hasFence),           String.format("Valla de  %s",     base.getName().getString()));
-            if (hasSlab      != null) add(EverySlab.SLABS.getBlockItem(hasSlab),             String.format("Losa de %s",      base.getName().getString()));
-            if (hasStair     != null) add(EverySlab.STAIRS.getBlockItem(hasStair),           String.format("Escaleras de %s",    base.getName().getString()));
-            if (hasWall      != null) add(EverySlab.WALLS.getBlockItem(hasWall),             String.format("Muro de %s",      base.getName().getString()));
+            if (hasFenceGate != null) provider.add(EverySlab.FENCE_GATES.getBlockItem(hasFenceGate), String.format("Puerta de valla de %s", base.getName().getString()));
+            if (hasFence     != null) provider.add(EverySlab.FENCES.getBlockItem(hasFence),           String.format("Valla de  %s",     base.getName().getString()));
+            if (hasSlab      != null) provider.add(EverySlab.SLABS.getBlockItem(hasSlab),             String.format("Losa de %s",      base.getName().getString()));
+            if (hasStair     != null) provider.add(EverySlab.STAIRS.getBlockItem(hasStair),           String.format("Escaleras de %s",    base.getName().getString()));
+            if (hasWall      != null) provider.add(EverySlab.WALLS.getBlockItem(hasWall),             String.format("Muro de %s",      base.getName().getString()));
         });
 
         // make sure to restore the original language for other language localizations

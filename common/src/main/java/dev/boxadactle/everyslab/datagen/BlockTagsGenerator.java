@@ -6,33 +6,32 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.boxadactle.everyslab.Constants;
 import dev.boxadactle.everyslab.EverySlab;
-import dev.boxadactle.everyslab.registry.*;
+import dev.boxadactle.everyslab.datagen.util.BlockTagsHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import org.apache.commons.lang3.function.TriConsumer;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
-public class BlockTagsGenerator extends BlockTagsProvider {
-    public BlockTagsGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        super(output, lookupProvider, EverySlab.MOD_ID);
+public class BlockTagsGenerator {
+
+    public BlockTagsHelper tagsProvider;
+
+    public BlockTagsGenerator(BlockTagsHelper pr) {
+        tagsProvider = pr;
     }
 
-    private HashMap<String, List<String>> tagCache = new HashMap<>();
+    private final HashMap<String, List<String>> tagCache = new HashMap<>();
 
-    @Override
-    protected void addTags(HolderLookup.Provider provider) {
+    public void addTags(HolderLookup.Provider provider) {
         // we have to research block tags like this because
         // they are not loaded yet when this runs, and we
         // need to know which tool tags to add the new blocks to
@@ -54,35 +53,35 @@ public class BlockTagsGenerator extends BlockTagsProvider {
             Block hasWall = EverySlab.WALLS.hasVariant(baseLocation) ? EverySlab.WALLS.blockFromBaseBlock(baseLocation) : null;
 
             TriConsumer<Block, MiningLevel, MiningTool> addMiningTags = ((block, miningLevel, miningTool) -> {
-                if (miningLevel != null) tag(miningLevel.tag).add(block);
-                if (miningTool != null) tag(miningTool.tag).add(block);
+                if (miningLevel != null) tagsProvider.tag(miningLevel.tag).add(block);
+                if (miningTool != null) tagsProvider.tag(miningTool.tag).add(block);
             });
 
             MiningLevel level = getCorrectMiningLevel(base);
             MiningTool tool = getCorrectTool(base);
 
             if (hasFenceGate != null) {
-                tag(BlockTags.FENCE_GATES).add(hasFenceGate);
+                tagsProvider.tag(BlockTags.FENCE_GATES).add(hasFenceGate);
                 addMiningTags.accept(hasFenceGate, level, tool);
             }
 
             if (hasFence != null) {
-                tag(BlockTags.FENCES).add(hasFence);
+                tagsProvider.tag(BlockTags.FENCES).add(hasFence);
                 addMiningTags.accept(hasFence, level, tool);
             }
 
             if (hasSlab != null) {
-                tag(BlockTags.SLABS).add(hasSlab);
+                tagsProvider.tag(BlockTags.SLABS).add(hasSlab);
                 addMiningTags.accept(hasSlab, level, tool);
             }
 
             if (hasStair != null) {
-                tag(BlockTags.STAIRS).add(hasStair);
+                tagsProvider.tag(BlockTags.STAIRS).add(hasStair);
                 addMiningTags.accept(hasStair, level, tool);
             }
 
             if (hasWall != null) {
-                tag(BlockTags.WALLS).add(hasWall);
+                tagsProvider.tag(BlockTags.WALLS).add(hasWall);
                 addMiningTags.accept(hasWall, level, tool);
             }
         });

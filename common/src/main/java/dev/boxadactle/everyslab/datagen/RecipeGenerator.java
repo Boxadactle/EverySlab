@@ -13,12 +13,12 @@ import net.minecraft.world.item.Items;
 import java.util.concurrent.CompletableFuture;
 
 public class RecipeGenerator extends RecipeProvider {
-    protected RecipeGenerator(HolderLookup.Provider registries, RecipeOutput output) {
+    public RecipeGenerator(HolderLookup.Provider registries, RecipeOutput output) {
         super(registries, output);
     }
 
     @Override
-    protected void buildRecipes() {
+    public void buildRecipes() {
         EverySlab.FILTERED_BLOCKS.forEach(base -> {
             Identifier baseLocation = BuiltInRegistries.BLOCK.getKey(base);
             Identifier hasFenceGate = EverySlab.FENCE_GATES.hasVariant(baseLocation) ? EverySlab.FENCE_GATES.fromBaseBlock(baseLocation) : null;
