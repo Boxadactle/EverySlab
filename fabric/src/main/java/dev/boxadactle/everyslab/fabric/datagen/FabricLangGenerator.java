@@ -1,7 +1,7 @@
 package dev.boxadactle.everyslab.fabric.datagen;
 
 import dev.boxadactle.everyslab.datagen.util.LanguageHelper;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
@@ -27,7 +27,7 @@ public class FabricLangGenerator extends FabricLanguageProvider {
 
     LanguageConstructor constructor;
 
-    public FabricLangGenerator(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup, LanguageConstructor provider, String locale) {
+    public FabricLangGenerator(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup, LanguageConstructor provider, String locale) {
         super(dataOutput, locale, registryLookup);
         this.constructor = provider;
     }

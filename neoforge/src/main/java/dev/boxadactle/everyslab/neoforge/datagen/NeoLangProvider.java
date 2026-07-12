@@ -56,12 +56,12 @@ public class NeoLangProvider extends LanguageProvider {
 
             @Override
             public void addItemStack(Supplier<ItemStack> key, String name) {
-                NeoLangProvider.this.addItemStack(key, name);
+                NeoLangProvider.this.addItem(() -> key.get().getItem(), name);
             }
 
             @Override
             public void add(ItemStack key, String name) {
-                NeoLangProvider.this.add(key, name);
+                NeoLangProvider.this.add(key.getItem(), name);
             }
 
             @Override

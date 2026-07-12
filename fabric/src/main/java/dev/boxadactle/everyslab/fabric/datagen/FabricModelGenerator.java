@@ -3,20 +3,21 @@ package dev.boxadactle.everyslab.fabric.datagen;
 import dev.boxadactle.everyslab.datagen.ModelGenerator;
 import dev.boxadactle.everyslab.datagen.util.ModelHelper;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.world.level.block.Block;
+import org.jspecify.annotations.NonNull;
 
 public class FabricModelGenerator extends FabricModelProvider {
-    public FabricModelGenerator(FabricDataOutput output) {
+    public FabricModelGenerator(FabricPackOutput output) {
         super(output);
     }
 
     @Override
-    public void generateBlockStateModels(BlockModelGenerators blockStateModelGenerator) {
+    public void generateBlockStateModels(@NonNull BlockModelGenerators blockStateModelGenerator) {
         ModelGenerator generator = new ModelGenerator(base -> new ModelHelper.BlockFamilyProvider() {
-            final BlockModelGenerators.BlockFamilyProvider family = blockStateModelGenerator.family(base);
+            final BlockModelGenerators.BlockFamilyProvider family = ((FamilyConstructor)blockStateModelGenerator).everySlab$familyWithExistingFullBlock(base);
 
             @Override
             public void fenceGate(Block fenceGateBlock) {
@@ -48,6 +49,10 @@ public class FabricModelGenerator extends FabricModelProvider {
     }
 
     @Override
-    public void generateItemModels(ItemModelGenerators itemModelGenerator) {
+    public void generateItemModels(@NonNull ItemModelGenerators itemModelGenerator) {
+    }
+
+    public interface FamilyConstructor {
+        BlockModelGenerators.BlockFamilyProvider everySlab$familyWithExistingFullBlock(Block fullBlock);
     }
 }

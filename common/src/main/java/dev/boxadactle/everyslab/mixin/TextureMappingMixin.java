@@ -6,6 +6,7 @@ import dev.boxadactle.everyslab.Constants;
 import dev.boxadactle.everyslab.EverySlab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
@@ -37,11 +38,11 @@ public class TextureMappingMixin {
     }
 
     @Inject(
-            method = "getBlockTexture(Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/resources/Identifier;",
+            method = "getBlockTexture(Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/client/resources/model/sprite/Material;",
             at = @At("HEAD"),
             cancellable = true
     )
-    private static void getPathIfExists(Block b, CallbackInfoReturnable<Identifier> cir) {
+    private static void getPathIfExists(Block b, CallbackInfoReturnable<Material> cir) {
         if (Constants.IS_DEV) {
             Identifier block = everySlab$applyResourceFixes(BuiltInRegistries.BLOCK.getKey(b));
 
@@ -54,11 +55,15 @@ public class TextureMappingMixin {
                 Constants.LOG.error("Could not find model file for block: " + block);
                 return;
             }
-            JsonObject json = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
-            JsonObject textures = json.getAsJsonObject("textures");
-            String allTexture = textures.get("all").getAsString();
-            Identifier mapping = Identifier.parse(allTexture);
-            cir.setReturnValue(mapping);
+            try {
+                JsonObject json = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
+                JsonObject textures = json.getAsJsonObject("textures");
+                String allTexture = textures.get("all").getAsString();
+                Identifier mapping = Identifier.parse(allTexture);
+                cir.setReturnValue(new Material(mapping));
+            } catch (UnsupportedOperationException e) {
+                Constants.LOG.error("An error occured when parsing model file for block: " + block);
+            }
         }
     }
 }

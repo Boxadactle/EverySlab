@@ -23,7 +23,8 @@
         ]
     },
     "mixins": [
-        "everyslab.mixins.json"
+        "everyslab.mixins.json",
+        "fabric.everyslab.mixins.json"
     ],
     "depends": {
         "fabricloader": ">=${fabric_loader_version}",
